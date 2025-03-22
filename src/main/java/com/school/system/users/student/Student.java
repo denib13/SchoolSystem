@@ -19,17 +19,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "students")
 public class Student extends User {
     @Column(nullable = false)
-    @NotBlank(message = "Student: School cannot be blank")
-    @Size(min = 3, max = 32, message = "Student: School must be between 3 and 32 characters")
     private String school;
 
     @Column(nullable = false)
-    @Range(min = 1, max = 12, message = "Student: School year must be between 1 and 12")
-    @NotBlank(message = "Student: School year cannot be blank")
     private Integer year;
 
     @Column(nullable = false, length = 1, name = "classGroup")
-    @Pattern(regexp = "^[A-Z]$", message = "School group must be a single uppercase letter (A-Z)")
-    @NotBlank(message = "Student: Group cannot be blank")
     private String group;
 }
