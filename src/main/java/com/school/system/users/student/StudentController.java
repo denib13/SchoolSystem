@@ -1,15 +1,16 @@
 package com.school.system.users.student;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/students")
+@RequestMapping(path = "api/students/")
 public class StudentController {
     private final StudentService studentService;
 
@@ -19,7 +20,25 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(StudentRequestDTO studentDTO) {
+    public ResponseEntity<Student> createStudent(@RequestBody @Valid StudentRequestDTO studentDTO) {
+        System.out.println(studentDTO);
         return new ResponseEntity<>(studentService.createStudent(studentDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Student>> getStudents() {
+        return new ResponseEntity<>(studentService.getStudents(), HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable("id") UUID id,
+                                                 @RequestBody @Valid StudentRequestDTO studentDTO) {
+        return new ResponseEntity<>(studentService.updateStudent(id, studentDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable("id") UUID id) {
+        studentService.deleteStudent(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -2,6 +2,7 @@ package com.school.system.users.student;
 
 import com.school.system.users.user.UserRequestDTO;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,7 +18,7 @@ public class StudentRequestDTO extends UserRequestDTO {
     private String school;
 
     @Range(min = 1, max = 12, message = "Student: School year must be between 1 and 12")
-    @NotBlank(message = "Student: School year cannot be blank")
+    @NotNull(message = "Student: School year cannot be blank")
     private Integer year;
 
     @Pattern(regexp = "^[A-Z]$", message = "School group must be a single uppercase letter (A-Z)")
