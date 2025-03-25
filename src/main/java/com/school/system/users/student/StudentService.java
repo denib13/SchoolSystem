@@ -21,13 +21,9 @@ public class StudentService {
         toCreate.setMiddleName(studentDTO.getMiddleName());
         toCreate.setSurname(studentDTO.getSurname());
         toCreate.setNationalIdNumber(studentDTO.getNationalIdNumber());
-        toCreate.setCity(studentDTO.getCity());
         toCreate.setUsername(studentDTO.getUsername());
         toCreate.setPassword(studentDTO.getPassword());
         toCreate.setEmail(studentDTO.getEmail());
-        toCreate.setSchool(studentDTO.getSchool());
-        toCreate.setYear(studentDTO.getYear());
-        toCreate.setGroup(studentDTO.getGroup());
 
         return studentRepository.save(toCreate);
     }
@@ -43,10 +39,7 @@ public class StudentService {
             return new Student();
         }
 
-        toUpdate.setCity(studentDTO.getCity());
-        toUpdate.setSchool(studentDTO.getSchool());
-        toUpdate.setYear(studentDTO.getYear());
-        toUpdate.setGroup(studentDTO.getGroup());
+        //
 
         return studentRepository.save(toUpdate);
     }

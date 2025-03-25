@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class TeacherRequestDTO extends UserRequestDTO {
-    @Size(min = 3, max = 32, message = "Student: School must be between 3 and 32 characters")
-    @NotBlank(message = "Teacher: School cannot be blank")
-    private String school;
+//    @Size(min = 3, max = 32, message = "Student: School must be between 3 and 32 characters")
+//    @NotBlank(message = "Teacher: School cannot be blank")
+//    private String school;
 }

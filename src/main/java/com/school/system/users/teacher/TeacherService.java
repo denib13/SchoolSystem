@@ -21,11 +21,9 @@ public class TeacherService {
         toCreate.setMiddleName(teacherDTO.getMiddleName());
         toCreate.setSurname(teacherDTO.getSurname());
         toCreate.setNationalIdNumber(teacherDTO.getNationalIdNumber());
-        toCreate.setCity(teacherDTO.getCity());
         toCreate.setUsername(teacherDTO.getUsername());
         toCreate.setPassword(teacherDTO.getPassword());
         toCreate.setEmail(teacherDTO.getEmail());
-        toCreate.setSchool(teacherDTO.getSchool());
 
         return teacherRepository.save(toCreate);
     }
@@ -39,8 +37,7 @@ public class TeacherService {
         if(toUpdate == null) {
             return null;
         }
-        toUpdate.setCity(teacherDTO.getCity());
-        toUpdate.setSchool(teacherDTO.getSchool());
+
         return teacherRepository.save(toUpdate);
     }
 

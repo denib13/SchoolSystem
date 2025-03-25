@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "students")
 public class Student extends User {
-    @Column(nullable = false)
-    private String school;
+//    @Column(nullable = false)
+//    private String school;
+//    will be a separate entity
 
-    @Column(nullable = false)
-    private Integer year;
-
-    @Column(nullable = false, length = 1, name = "classGroup")
-    private String group;
+//    @Column(nullable = false)
+//    private Integer year;
+//
+//    @Column(nullable = false, length = 1, name = "classGroup")
+//    private String group;
 }

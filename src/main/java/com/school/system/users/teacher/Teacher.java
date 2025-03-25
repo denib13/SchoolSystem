@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "teachers")
 public class Teacher extends User {
-    @Column(nullable = false)
-    private String school;
+//    @Column(nullable = false)
+//    private String school;
+//    will be a separate entity
 }

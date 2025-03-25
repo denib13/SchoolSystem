@@ -35,8 +35,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String nationalIdNumber;
 
-    private String city;
-
     @Column(nullable = false, unique = true)
     private String username;
 
