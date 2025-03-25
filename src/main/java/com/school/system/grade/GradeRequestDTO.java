@@ -18,5 +18,4 @@ public record GradeRequestDTO(
         @NotBlank(message = "Grade: Group cannot be blank")
         char group,
         List<UUID> students
-) {
-}
+) {}
