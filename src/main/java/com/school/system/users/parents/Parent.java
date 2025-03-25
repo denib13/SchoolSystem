@@ -21,5 +21,5 @@ public class Parent extends User {
             joinColumns = @JoinColumn(name = "parent_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    List<Student> children;
+    private List<Student> children;
 }
