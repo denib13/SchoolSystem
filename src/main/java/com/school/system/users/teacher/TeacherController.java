@@ -12,7 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "api/teachers/")
 public class TeacherController {
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
 
     @Autowired
     public TeacherController(TeacherService teacherService) {

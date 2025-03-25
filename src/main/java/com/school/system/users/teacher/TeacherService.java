@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Service
 public class TeacherService {
-    private TeacherRepository teacherRepository;
+    private final TeacherRepository teacherRepository;
 
     @Autowired
     public TeacherService(TeacherRepository teacherRepository) {
@@ -37,6 +37,12 @@ public class TeacherService {
         if(toUpdate == null) {
             return null;
         }
+
+        toUpdate.setName(teacherDTO.getName());
+        toUpdate.setMiddleName(teacherDTO.getMiddleName());
+        toUpdate.setSurname(teacherDTO.getSurname());
+        toUpdate.setNationalIdNumber(teacherDTO.getNationalIdNumber());
+        toUpdate.setUsername(teacherDTO.getUsername());
 
         return teacherRepository.save(toUpdate);
     }
