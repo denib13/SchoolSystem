@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping(path = "api/schools/")
 public class SchoolController {
     private final SchoolService schoolService;
 

@@ -16,6 +16,6 @@ public record GradeRequestDTO(
         int year,
         @Pattern(regexp = "^[A-Z]$", message = "School group must be a single uppercase letter (A-Z)")
         @NotBlank(message = "Grade: Group cannot be blank")
-        char group,
+        String group,
         List<UUID> students
 ) {}

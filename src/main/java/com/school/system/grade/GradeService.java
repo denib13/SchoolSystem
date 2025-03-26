@@ -36,7 +36,7 @@ public class GradeService {
                 : new ArrayList<>();
 
         toCreate.setYear(gradeDTO.year());
-        toCreate.setGroup(gradeDTO.group());
+        toCreate.setGroup(gradeDTO.group().charAt(0));
         toCreate.setSchool(school);
         toCreate.setStudents(students);
 
@@ -69,7 +69,7 @@ public class GradeService {
             }
         }
         toUpdate.setYear(gradeDTO.year());
-        toUpdate.setGroup(gradeDTO.group());
+        toUpdate.setGroup(gradeDTO.group().charAt(0));
         toUpdate.setStudents(students);
 
         return gradeRepository.save(toUpdate);
