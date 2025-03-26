@@ -1,6 +1,7 @@
 package com.school.system.users.teacher;
 
 import com.school.system.school.School;
+import com.school.system.subject.Subject;
 import com.school.system.users.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +25,7 @@ public class Teacher extends User {
             inverseJoinColumns = @JoinColumn(name = "school_id")
     )
     private List<School> schools;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Subject> subjects;
 }

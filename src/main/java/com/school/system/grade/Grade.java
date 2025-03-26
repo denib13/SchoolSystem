@@ -1,6 +1,7 @@
 package com.school.system.grade;
 
 import com.school.system.school.School;
+import com.school.system.subject.Subject;
 import com.school.system.users.student.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,4 +33,7 @@ public class Grade {
 
     @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
     private List<Student> students;
+
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
+    private List<Subject> subjects;
 }
