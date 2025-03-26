@@ -8,11 +8,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.UUID;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class TeacherRequestDTO extends UserRequestDTO {
-//    @Size(min = 3, max = 32, message = "Student: School must be between 3 and 32 characters")
-//    @NotBlank(message = "Teacher: School cannot be blank")
-//    private String school;
+    private List<UUID> schools;
 }

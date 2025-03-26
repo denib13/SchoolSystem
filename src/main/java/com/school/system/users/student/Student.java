@@ -1,5 +1,7 @@
 package com.school.system.users.student;
 
+import com.school.system.grade.Grade;
+import com.school.system.school.School;
 import com.school.system.users.parents.Parent;
 import com.school.system.users.user.User;
 import jakarta.persistence.*;
@@ -22,14 +24,13 @@ import java.util.List;
 @Table(name = "students")
 public class Student extends User {
     @ManyToMany(mappedBy = "children", cascade = CascadeType.ALL)
-    List<Parent> parents;
-//    @Column(nullable = false)
-//    private String school;
-//    will be a separate entity
+    private List<Parent> parents;
 
-//    @Column(nullable = false)
-//    private Integer year;
-//
-//    @Column(nullable = false, length = 1, name = "classGroup")
-//    private String group;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id", nullable = false)
+    private School school;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", nullable = false)
+    private Grade schoolClass;
 }

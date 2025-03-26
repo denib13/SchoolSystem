@@ -1,22 +1,33 @@
 package com.school.system.users.teacher;
 
+import com.school.system.school.School;
+import com.school.system.school.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class TeacherService {
     private final TeacherRepository teacherRepository;
+    private final SchoolRepository schoolRepository;
 
     @Autowired
-    public TeacherService(TeacherRepository teacherRepository) {
+    public TeacherService(TeacherRepository teacherRepository,
+                          SchoolRepository schoolRepository) {
         this.teacherRepository = teacherRepository;
+        this.schoolRepository = schoolRepository;
     }
 
     public Teacher createTeacher(TeacherRequestDTO teacherDTO) {
         Teacher toCreate = new Teacher();
+
+        List<School> schools = teacherDTO.getSchools() != null
+                ? schoolRepository.findAllById(teacherDTO.getSchools())
+                : new LinkedList<>();
+
         toCreate.setName(teacherDTO.getName());
         toCreate.setMiddleName(teacherDTO.getMiddleName());
         toCreate.setSurname(teacherDTO.getSurname());
@@ -24,6 +35,7 @@ public class TeacherService {
         toCreate.setUsername(teacherDTO.getUsername());
         toCreate.setPassword(teacherDTO.getPassword());
         toCreate.setEmail(teacherDTO.getEmail());
+        toCreate.setSchools(schools);
 
         return teacherRepository.save(toCreate);
     }
@@ -38,11 +50,16 @@ public class TeacherService {
             return null;
         }
 
+        List<School> schools = teacherDTO.getSchools() != null
+                ? schoolRepository.findAllById(teacherDTO.getSchools())
+                : new LinkedList<>();
+
         toUpdate.setName(teacherDTO.getName());
         toUpdate.setMiddleName(teacherDTO.getMiddleName());
         toUpdate.setSurname(teacherDTO.getSurname());
         toUpdate.setNationalIdNumber(teacherDTO.getNationalIdNumber());
         toUpdate.setUsername(teacherDTO.getUsername());
+        toUpdate.setSchools(schools);
 
         return teacherRepository.save(toUpdate);
     }
