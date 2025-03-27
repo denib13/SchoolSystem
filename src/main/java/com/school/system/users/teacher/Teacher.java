@@ -1,5 +1,6 @@
 package com.school.system.users.teacher;
 
+import com.school.system.mark.Mark;
 import com.school.system.school.School;
 import com.school.system.subject.Subject;
 import com.school.system.users.user.User;
@@ -28,4 +29,7 @@ public class Teacher extends User {
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Subject> subjects;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<Mark> marks;
 }

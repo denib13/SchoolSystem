@@ -1,12 +1,14 @@
 package com.school.system.subject;
 
 import com.school.system.grade.Grade;
+import com.school.system.mark.Mark;
 import com.school.system.users.teacher.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,4 +34,7 @@ public class Subject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
     private Grade schoolClass;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<Mark> marks;
 }
