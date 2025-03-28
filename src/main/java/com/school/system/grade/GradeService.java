@@ -27,7 +27,7 @@ public class GradeService {
         this.studentRepository = studentRepository;
     }
 
-    public Grade createGrade(GradeRequestDTO gradeDTO) {
+    public GradeResponseDTO createGrade(GradeRequestDTO gradeDTO) {
         Grade toCreate = new Grade();
 
         School school = schoolRepository.findById(gradeDTO.school()).orElse(null);
@@ -40,22 +40,22 @@ public class GradeService {
         toCreate.setSchool(school);
         toCreate.setStudents(students);
 
-        return gradeRepository.save(toCreate);
+        return GradeMapper.INSTANCE.gradeToGradeResponseDTO(gradeRepository.save(toCreate));
     }
 
-    public List<Grade> getGrades() {
-        return gradeRepository.findAll();
+    public List<GradeResponseDTO> getGrades() {
+        return GradeMapper.INSTANCE.gradeListToGradeResponseDTOList(gradeRepository.findAll());
     }
 
 //    public List<Grade> getGradesBySchool(UUID schoolId) {
 //
 //    }
 
-    public Grade updateGrade(UUID id, GradeRequestDTO gradeDTO) {
+    public GradeResponseDTO updateGrade(UUID id, GradeRequestDTO gradeDTO) {
         Grade toUpdate = gradeRepository.findById(id).orElse(null);
 
         if(toUpdate == null) {
-            return new Grade();
+            return null;
         }
 
         List<Student> students = gradeDTO.students() != null
@@ -72,7 +72,7 @@ public class GradeService {
         toUpdate.setGroup(gradeDTO.group().charAt(0));
         toUpdate.setStudents(students);
 
-        return gradeRepository.save(toUpdate);
+        return GradeMapper.INSTANCE.gradeToGradeResponseDTO(gradeRepository.save(toUpdate));
     }
 
     public void deleteGrade(UUID id) {

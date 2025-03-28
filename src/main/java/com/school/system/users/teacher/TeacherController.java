@@ -20,17 +20,17 @@ public class TeacherController {
     }
 
     @PostMapping
-    public ResponseEntity<Teacher> createTeacher(@RequestBody @Valid TeacherRequestDTO teacherDTO) {
+    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody @Valid TeacherRequestDTO teacherDTO) {
         return new ResponseEntity<>(teacherService.createTeacher(teacherDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Teacher>> getTeachers() {
+    public ResponseEntity<List<TeacherResponseDTO>> getTeachers() {
         return new ResponseEntity<>(teacherService.getTeachers(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Teacher> updateTeacher(@PathVariable("id") UUID id,
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable("id") UUID id,
                                                  @RequestBody @Valid TeacherRequestDTO teacherDTO) {
         return new ResponseEntity<>(teacherService.updateTeacher(id, teacherDTO), HttpStatus.OK);
     }

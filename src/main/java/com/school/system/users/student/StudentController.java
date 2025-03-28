@@ -20,17 +20,17 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody @Valid StudentRequestDTO studentDTO) {
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO studentDTO) {
         return new ResponseEntity<>(studentService.createStudent(studentDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getStudents() {
+    public ResponseEntity<List<StudentResponseDTO>> getStudents() {
         return new ResponseEntity<>(studentService.getStudents(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable("id") UUID id,
+    public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable("id") UUID id,
                                                  @RequestBody @Valid StudentRequestDTO studentDTO) {
         return new ResponseEntity<>(studentService.updateStudent(id, studentDTO), HttpStatus.OK);
     }

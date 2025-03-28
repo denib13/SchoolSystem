@@ -31,7 +31,7 @@ public class MarkService {
         this.teacherRepository = teacherRepository;
     }
 
-    public Mark createMark(MarkRequestDTO markDTO) {
+    public MarkResponseDTO createMark(MarkRequestDTO markDTO) {
         Mark toCreate = new Mark();
 
         Subject subject = subjectRepository.findById(markDTO.subject()).orElse(null);
@@ -39,7 +39,7 @@ public class MarkService {
         Teacher teacher = teacherRepository.findById(markDTO.teacher()).orElse(null);
 
         if(subject == null || student == null || teacher == null) {
-            return new Mark();
+            return null;
         }
 
         toCreate.setSubject(subject);
@@ -48,18 +48,18 @@ public class MarkService {
         toCreate.setValue(markDTO.value());
         toCreate.setCreatedAt(LocalDate.now());
 
-        return markRepository.save(toCreate);
+        return MarkMapper.INSTANCE.markToMarkResponseDTO(markRepository.save(toCreate));
     }
 
-    public List<Mark> getMarks() {
-        return markRepository.findAll();
+    public List<MarkResponseDTO> getMarks() {
+        return MarkMapper.INSTANCE.markListToMarkResponseDTOList(markRepository.findAll());
     }
 
-    public Mark updateMark(UUID id, MarkRequestDTO markDTO) {
+    public MarkResponseDTO updateMark(UUID id, MarkRequestDTO markDTO) {
         Mark toUpdate = markRepository.findById(id).orElse(null);
 
         if(toUpdate == null) {
-            return new Mark();
+            return null;
         }
 
         if(markDTO.subject() != toUpdate.getSubject().getId()) {
@@ -85,7 +85,7 @@ public class MarkService {
 
         toUpdate.setValue(markDTO.value());
 
-        return markRepository.save(toUpdate);
+        return MarkMapper.INSTANCE.markToMarkResponseDTO(markRepository.save(toUpdate));
     }
 
     public void deleteMark(UUID id) {

@@ -20,17 +20,17 @@ public class MarkController {
     }
 
     @PostMapping
-    public ResponseEntity<Mark> createMark(@RequestBody @Valid MarkRequestDTO markDTO) {
+    public ResponseEntity<MarkResponseDTO> createMark(@RequestBody @Valid MarkRequestDTO markDTO) {
         return new ResponseEntity<>(markService.createMark(markDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Mark>> getMarks() {
+    public ResponseEntity<List<MarkResponseDTO>> getMarks() {
         return new ResponseEntity<>(markService.getMarks(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Mark> updateMark(@PathVariable("id") UUID id,
+    public ResponseEntity<MarkResponseDTO> updateMark(@PathVariable("id") UUID id,
                                            @RequestBody @Valid MarkRequestDTO markDTO) {
         return new ResponseEntity<>(markService.updateMark(id, markDTO), HttpStatus.OK);
     }
