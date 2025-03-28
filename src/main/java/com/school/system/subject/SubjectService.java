@@ -25,7 +25,7 @@ public class SubjectService {
         this.gradeRepository = gradeRepository;
     }
 
-    public Subject createSubject(SubjectRequestDTO subjectDTO) {
+    public SubjectResponseDTO createSubject(SubjectRequestDTO subjectDTO) {
         Subject toCreate = new Subject();
 
         Teacher teacher = subjectDTO.teacher() != null
@@ -47,18 +47,18 @@ public class SubjectService {
             toCreate.setSchoolClass(grade);
         }
 
-        return subjectRepository.save(toCreate);
+        return SubjectMapper.INSTANCE.subjectToSubjectResponseDTO(subjectRepository.save(toCreate));
     }
 
-    public List<Subject> getSubjects() {
-        return subjectRepository.findAll();
+    public List<SubjectResponseDTO> getSubjects() {
+        return SubjectMapper.INSTANCE.subjectListToSubjectResponseDTOList(subjectRepository.findAll());
     }
 
-    public Subject updateSubject(UUID id, SubjectRequestDTO subjectDTO) {
+    public SubjectResponseDTO updateSubject(UUID id, SubjectRequestDTO subjectDTO) {
         Subject toUpdate = subjectRepository.findById(id).orElse(null);
 
         if(toUpdate == null) {
-            return new Subject();
+            return null;
         }
 
         toUpdate.setName(subjectDTO.name());
@@ -82,7 +82,7 @@ public class SubjectService {
             }
         }
 
-        return subjectRepository.save(toUpdate);
+        return SubjectMapper.INSTANCE.subjectToSubjectResponseDTO(subjectRepository.save(toUpdate));
     }
 
     public void deleteSubject(UUID id) {

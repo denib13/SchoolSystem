@@ -20,17 +20,17 @@ public class SubjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody @Valid SubjectRequestDTO subjectDTO) {
+    public ResponseEntity<SubjectResponseDTO> createSubject(@RequestBody @Valid SubjectRequestDTO subjectDTO) {
         return new ResponseEntity<>(subjectService.createSubject(subjectDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Subject>> getSubjects() {
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjects() {
         return new ResponseEntity<>(subjectService.getSubjects(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable("id") UUID id,
+    public ResponseEntity<SubjectResponseDTO> updateSubject(@PathVariable("id") UUID id,
                                                  @RequestBody @Valid SubjectRequestDTO subjectDTO) {
         return new ResponseEntity<>(subjectService.updateSubject(id, subjectDTO), HttpStatus.OK);
     }
