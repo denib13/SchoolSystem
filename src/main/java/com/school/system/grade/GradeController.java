@@ -21,17 +21,17 @@ public class GradeController {
     }
 
     @PostMapping
-    public ResponseEntity<Grade> createGrade(@RequestBody @Valid GradeRequestDTO gradeDTO) {
+    public ResponseEntity<GradeResponseDTO> createGrade(@RequestBody @Valid GradeRequestDTO gradeDTO) {
         return new ResponseEntity<>(gradeService.createGrade(gradeDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Grade>> getGrades() {
+    public ResponseEntity<List<GradeResponseDTO>> getGrades() {
         return new ResponseEntity<>(gradeService.getGrades(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Grade> updateGrade(@PathVariable("id") UUID id,
+    public ResponseEntity<GradeResponseDTO> updateGrade(@PathVariable("id") UUID id,
                                              @RequestBody @Valid GradeRequestDTO gradeDTO) {
         return new ResponseEntity<>(gradeService.updateGrade(id, gradeDTO), HttpStatus.OK);
     }
