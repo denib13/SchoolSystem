@@ -9,7 +9,7 @@ import com.school.system.users.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +46,7 @@ public class MarkService {
         toCreate.setStudent(student);
         toCreate.setTeacher(teacher);
         toCreate.setValue(markDTO.value());
-        toCreate.setCreatedAt(LocalDate.now());
+        toCreate.setCreatedAt(LocalDateTime.now());
 
         return MarkMapper.INSTANCE.markToMarkResponseDTO(markRepository.save(toCreate));
     }

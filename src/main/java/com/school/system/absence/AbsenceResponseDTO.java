@@ -1,4 +1,6 @@
-package com.school.system.mark;
+package com.school.system.absence;
+
+
 
 import com.school.system.subject.SubjectResponseDTO;
 import com.school.system.users.student.StudentResponseDTO;
@@ -6,10 +8,9 @@ import com.school.system.users.teacher.TeacherResponseDTO;
 
 import java.time.LocalDateTime;
 
-public record MarkResponseDTO(
-        SubjectResponseDTO subject,
+public record AbsenceResponseDTO(
+        TeacherResponseDTO author,
         StudentResponseDTO student,
-        TeacherResponseDTO teacher,
-        int value,
+        SubjectResponseDTO subject,
         LocalDateTime createdAt
 ) {}
