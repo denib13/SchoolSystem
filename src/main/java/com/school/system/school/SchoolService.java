@@ -31,7 +31,7 @@ public class SchoolService {
         this.studentRepository = studentRepository;
     }
 
-    public School createSchool(SchoolRequestDTO schoolDTO) {
+    public SchoolResponseDTO createSchool(SchoolRequestDTO schoolDTO) {
         School toCreate = new School();
 
         List<Grade> classes = schoolDTO.classes() != null
@@ -52,14 +52,14 @@ public class SchoolService {
         toCreate.setTeachers(teachers);
         toCreate.setStudents(students);
 
-        return schoolRepository.save(toCreate);
+        return SchoolMapper.INSTANCE.schoolToSchoolResponseDTO(schoolRepository.save(toCreate));
     }
 
-    public School updateSchool(UUID id, SchoolRequestDTO schoolDTO) {
+    public SchoolResponseDTO updateSchool(UUID id, SchoolRequestDTO schoolDTO) {
         School toUpdate = schoolRepository.findById(id).orElse(null);
 
         if(toUpdate == null) {
-            return new School();
+            return null;
         }
 
         List<Grade> classes = schoolDTO.classes() != null
@@ -80,11 +80,11 @@ public class SchoolService {
         toUpdate.setTeachers(teachers);
         toUpdate.setStudents(students);
 
-        return schoolRepository.save(toUpdate);
+        return SchoolMapper.INSTANCE.schoolToSchoolResponseDTO(schoolRepository.save(toUpdate));
     }
 
-    public List<School> getSchools() {
-        return schoolRepository.findAll();
+    public List<SchoolResponseDTO> getSchools() {
+        return SchoolMapper.INSTANCE.schoolListToSchoolResponseDTOList(schoolRepository.findAll());
     }
 
     public void deleteSchool(UUID id) {

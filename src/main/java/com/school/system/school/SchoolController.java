@@ -20,17 +20,17 @@ public class SchoolController {
     }
 
     @PostMapping
-    public ResponseEntity<School> createSchool(@RequestBody @Valid SchoolRequestDTO schoolDTO) {
+    public ResponseEntity<SchoolResponseDTO> createSchool(@RequestBody @Valid SchoolRequestDTO schoolDTO) {
         return new ResponseEntity<>(schoolService.createSchool(schoolDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<School>> getSchools() {
+    public ResponseEntity<List<SchoolResponseDTO>> getSchools() {
         return new ResponseEntity<>(schoolService.getSchools(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<School> updateSchool(@PathVariable("id") UUID id,
+    public ResponseEntity<SchoolResponseDTO> updateSchool(@PathVariable("id") UUID id,
                                                @RequestBody @Valid SchoolRequestDTO schoolDTO) {
         return new ResponseEntity<>(schoolService.updateSchool(id, schoolDTO), HttpStatus.OK);
     }
