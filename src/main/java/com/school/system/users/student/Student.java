@@ -1,6 +1,7 @@
 package com.school.system.users.student;
 
 import com.school.system.grade.Grade;
+import com.school.system.mark.Mark;
 import com.school.system.school.School;
 import com.school.system.users.parents.Parent;
 import com.school.system.users.user.User;
@@ -33,4 +34,7 @@ public class Student extends User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
     private Grade schoolClass;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Mark> marks;
 }
