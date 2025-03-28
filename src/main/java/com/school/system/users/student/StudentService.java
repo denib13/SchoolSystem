@@ -31,7 +31,7 @@ public class StudentService {
         this.gradeRepository = gradeRepository;
     }
 
-    public Student createStudent(StudentRequestDTO studentDTO) {
+    public StudentResponseDTO createStudent(StudentRequestDTO studentDTO) {
         List<Parent> parents = studentDTO.getParents() != null
                 ? parentRepository.findAllById(studentDTO.getParents())
                 : new ArrayList<>();
@@ -58,18 +58,18 @@ public class StudentService {
             toCreate.setSchoolClass(schoolClass);
         }
 
-        return studentRepository.save(toCreate);
+        return StudentMapper.INSTANCE.studentToStudentResponseDTO(studentRepository.save(toCreate));
     }
 
-    public List<Student> getStudents() {
-        return studentRepository.findAll();
+    public List<StudentResponseDTO> getStudents() {
+        return StudentMapper.INSTANCE.studentListToStudentResponseDTOList(studentRepository.findAll());
     }
 
-    public Student updateStudent(UUID id, StudentRequestDTO studentDTO) {
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO) {
         Student toUpdate = studentRepository.findById(id).orElse(null);
 
         if(toUpdate == null) {
-            return new Student();
+            return null;
         }
 
         List<Parent> parents = studentDTO.getParents() != null
@@ -100,7 +100,7 @@ public class StudentService {
         toUpdate.setUsername(studentDTO.getUsername());
         toUpdate.setParents(parents);
 
-        return studentRepository.save(toUpdate);
+        return StudentMapper.INSTANCE.studentToStudentResponseDTO(studentRepository.save(toUpdate));
     }
 
     public void deleteStudent(UUID id) {

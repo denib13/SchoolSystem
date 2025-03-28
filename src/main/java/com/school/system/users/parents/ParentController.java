@@ -20,17 +20,17 @@ public class ParentController {
     }
 
     @PostMapping
-    public ResponseEntity<Parent> createParent(@RequestBody @Valid ParentRequestDTO parentDTO) {
+    public ResponseEntity<ParentResponseDTO> createParent(@RequestBody @Valid ParentRequestDTO parentDTO) {
         return new ResponseEntity<>(parentService.createParent(parentDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Parent>> getParents() {
+    public ResponseEntity<List<ParentResponseDTO>> getParents() {
         return new ResponseEntity<>(parentService.getParents(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Parent> updateParent(@PathVariable("id") UUID id,
+    public ResponseEntity<ParentResponseDTO> updateParent(@PathVariable("id") UUID id,
                                                @RequestBody @Valid ParentRequestDTO parentDTO) {
         return new ResponseEntity<>(parentService.updateParent(id, parentDTO), HttpStatus.OK);
     }

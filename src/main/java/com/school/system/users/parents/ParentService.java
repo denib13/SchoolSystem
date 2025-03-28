@@ -21,7 +21,7 @@ public class ParentService {
         this.studentRepository = studentRepository;
     }
 
-    public Parent createParent(ParentRequestDTO parentDTO) {
+    public ParentResponseDTO createParent(ParentRequestDTO parentDTO) {
         List<Student> children = parentDTO.getChildren() != null
                 ? studentRepository.findAllById(parentDTO.getChildren())
                 : new ArrayList<>();
@@ -36,17 +36,17 @@ public class ParentService {
         toCreate.setEmail(parentDTO.getEmail());
         toCreate.setChildren(children);
 
-        return parentRepository.save(toCreate);
+        return ParentMapper.INSTANCE.parentToParentResponseDTO(parentRepository.save(toCreate));
     }
 
-    public List<Parent> getParents() {
-        return parentRepository.findAll();
+    public List<ParentResponseDTO> getParents() {
+        return ParentMapper.INSTANCE.parentListToParentResponseDTO(parentRepository.findAll());
     }
 
-    public Parent updateParent(UUID id, ParentRequestDTO parentDTO) {
+    public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO) {
         Parent toUpdate = parentRepository.findById(id).orElse(null);
         if(toUpdate == null) {
-            return new Parent();
+            return null;
         }
 
         List<Student> children = parentDTO.getChildren() != null
@@ -60,7 +60,7 @@ public class ParentService {
         toUpdate.setUsername(parentDTO.getUsername());
         toUpdate.setChildren(children);
 
-        return parentRepository.save(toUpdate);
+        return ParentMapper.INSTANCE.parentToParentResponseDTO(parentRepository.save(toUpdate));
     }
 
     public void deleteParent(UUID id) {
