@@ -2,6 +2,7 @@ package com.school.system.users.teacher;
 
 import com.school.system.absence.Absence;
 import com.school.system.mark.Mark;
+import com.school.system.remark.Remark;
 import com.school.system.school.School;
 import com.school.system.subject.Subject;
 import com.school.system.users.user.User;
@@ -36,4 +37,7 @@ public class Teacher extends User {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Absence> createdAbsences;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Remark> remarks;
 }
