@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "headmasters")
 public class Headmaster extends User {
     @OneToOne
-    @JoinColumn(name = "school_id", referencedColumnName = "id")
+    @JoinColumn(name = "school_id", referencedColumnName = "id", nullable = false)
     private School school;
 }
