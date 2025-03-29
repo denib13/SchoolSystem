@@ -38,6 +38,6 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Absence> createdAbsences;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Remark> remarks;
 }
