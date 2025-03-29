@@ -3,6 +3,7 @@ package com.school.system.subject;
 import com.school.system.absence.Absence;
 import com.school.system.grade.Grade;
 import com.school.system.mark.Mark;
+import com.school.system.remark.Remark;
 import com.school.system.users.teacher.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,4 +42,7 @@ public class Subject {
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     private List<Absence> absences;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<Remark> remarks;
 }
