@@ -49,11 +49,11 @@ public class RemarkService {
         toCreate.setHeading(remarkDTO.heading());
         toCreate.setBody(remarkDTO.body());
 
-        return RemarkMapper.INSTANCE.remarkToRemarkResponseDTO(remarkRepository.save(toCreate));
+        return RemarkMapper.remarkToRemarkResponseDTO(remarkRepository.save(toCreate));
     }
 
     public List<RemarkResponseDTO> getRemarks() {
-        return RemarkMapper.INSTANCE.remarkListToRemarkResponseDTOList(remarkRepository.findAll());
+        return RemarkMapper.remarkListToRemarkResponseDTOList(remarkRepository.findAll());
     }
 
     public RemarkResponseDTO updateRemark(UUID id, RemarkRequestDTO remarkDTO) {
@@ -87,7 +87,7 @@ public class RemarkService {
         toUpdate.setHeading(remarkDTO.heading());
         toUpdate.setBody(remarkDTO.body());
 
-        return RemarkMapper.INSTANCE.remarkToRemarkResponseDTO(remarkRepository.save(toUpdate));
+        return RemarkMapper.remarkToRemarkResponseDTO(remarkRepository.save(toUpdate));
     }
 
     public void deleteRemark(UUID id) {

@@ -58,11 +58,11 @@ public class StudentService {
             toCreate.setSchoolClass(schoolClass);
         }
 
-        return StudentMapper.INSTANCE.studentToStudentResponseDTO(studentRepository.save(toCreate));
+        return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toCreate));
     }
 
     public List<StudentResponseDTO> getStudents() {
-        return StudentMapper.INSTANCE.studentListToStudentResponseDTOList(studentRepository.findAll());
+        return StudentMapper.studentListToStudentResponseDTOList(studentRepository.findAll());
     }
 
     public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO) {
@@ -100,7 +100,7 @@ public class StudentService {
         toUpdate.setUsername(studentDTO.getUsername());
         toUpdate.setParents(parents);
 
-        return StudentMapper.INSTANCE.studentToStudentResponseDTO(studentRepository.save(toUpdate));
+        return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toUpdate));
     }
 
     public void deleteStudent(UUID id) {

@@ -47,11 +47,11 @@ public class SubjectService {
             toCreate.setSchoolClass(grade);
         }
 
-        return SubjectMapper.INSTANCE.subjectToSubjectResponseDTO(subjectRepository.save(toCreate));
+        return SubjectMapper.subjectToSubjectResponseDTO(subjectRepository.save(toCreate));
     }
 
     public List<SubjectResponseDTO> getSubjects() {
-        return SubjectMapper.INSTANCE.subjectListToSubjectResponseDTOList(subjectRepository.findAll());
+        return SubjectMapper.subjectListToSubjectResponseDTOList(subjectRepository.findAll());
     }
 
     public SubjectResponseDTO updateSubject(UUID id, SubjectRequestDTO subjectDTO) {
@@ -82,7 +82,7 @@ public class SubjectService {
             }
         }
 
-        return SubjectMapper.INSTANCE.subjectToSubjectResponseDTO(subjectRepository.save(toUpdate));
+        return SubjectMapper.subjectToSubjectResponseDTO(subjectRepository.save(toUpdate));
     }
 
     public void deleteSubject(UUID id) {

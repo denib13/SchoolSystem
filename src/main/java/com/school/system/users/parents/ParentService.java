@@ -36,11 +36,11 @@ public class ParentService {
         toCreate.setEmail(parentDTO.getEmail());
         toCreate.setChildren(children);
 
-        return ParentMapper.INSTANCE.parentToParentResponseDTO(parentRepository.save(toCreate));
+        return ParentMapper.parentToParentResponseDTO(parentRepository.save(toCreate));
     }
 
     public List<ParentResponseDTO> getParents() {
-        return ParentMapper.INSTANCE.parentListToParentResponseDTO(parentRepository.findAll());
+        return ParentMapper.parentListToParentResponseDTOList(parentRepository.findAll());
     }
 
     public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO) {
@@ -60,7 +60,7 @@ public class ParentService {
         toUpdate.setUsername(parentDTO.getUsername());
         toUpdate.setChildren(children);
 
-        return ParentMapper.INSTANCE.parentToParentResponseDTO(parentRepository.save(toUpdate));
+        return ParentMapper.parentToParentResponseDTO(parentRepository.save(toUpdate));
     }
 
     public void deleteParent(UUID id) {

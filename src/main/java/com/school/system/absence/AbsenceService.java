@@ -43,16 +43,16 @@ public class AbsenceService {
             return null;
         }
 
-        toCreate.setAuthor(teacher);
+        toCreate.setTeacher(teacher);
         toCreate.setStudent(student);
         toCreate.setSubject(subject);
         toCreate.setCreatedAt(LocalDateTime.now());
 
-        return AbsenceMapper.INSTANCE.absenceToAbsenceResponseDTO(absenceRepository.save(toCreate));
+        return AbsenceMapper.absenceToAbsenceResponseDTO(absenceRepository.save(toCreate));
     }
 
     public List<AbsenceResponseDTO> getAbsences() {
-        return AbsenceMapper.INSTANCE.absenceListToAbsenceResponseDTOList(absenceRepository.findAll());
+        return AbsenceMapper.absenceListToAbsenceResponseDTOList(absenceRepository.findAll());
     }
 
     public AbsenceResponseDTO updateAbsence(UUID id, AbsenceRequestDTO absenceDTO) {
@@ -62,10 +62,10 @@ public class AbsenceService {
             return null;
         }
 
-        if(toUpdate.getAuthor().getId() != absenceDTO.teacher()) {
+        if(toUpdate.getTeacher().getId() != absenceDTO.teacher()) {
             Teacher teacher = teacherRepository.findById(absenceDTO.teacher()).orElse(null);
             if(teacher != null) {
-                toUpdate.setAuthor(teacher);
+                toUpdate.setTeacher(teacher);
             }
         }
 
@@ -83,7 +83,7 @@ public class AbsenceService {
             }
         }
 
-        return AbsenceMapper.INSTANCE.absenceToAbsenceResponseDTO(absenceRepository.save(toUpdate));
+        return AbsenceMapper.absenceToAbsenceResponseDTO(absenceRepository.save(toUpdate));
     }
 
     public void deleteAbsence(UUID id) {
