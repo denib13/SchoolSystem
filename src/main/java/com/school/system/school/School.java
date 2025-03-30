@@ -1,6 +1,7 @@
 package com.school.system.school;
 
 import com.school.system.grade.Grade;
+import com.school.system.users.headmaster.Headmaster;
 import com.school.system.users.student.Student;
 import com.school.system.users.teacher.Teacher;
 import jakarta.persistence.*;
@@ -23,6 +24,10 @@ public class School {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "headmaster_id", referencedColumnName = "id")
+    private Headmaster headmaster;
 
     @Column(nullable = false)
     private String city;
