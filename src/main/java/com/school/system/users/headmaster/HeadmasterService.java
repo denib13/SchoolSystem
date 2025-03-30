@@ -37,7 +37,11 @@ public class HeadmasterService {
         toCreate.setEmail(headmasterDTO.getEmail());
         toCreate.setSchool(school);
 
-        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(headmasterRepository.save(toCreate));
+        Headmaster newHeadmaster = headmasterRepository.save(toCreate);
+        school.setHeadmaster(newHeadmaster);
+        schoolRepository.save(school);
+
+        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(newHeadmaster);
     }
 
     public List<HeadmasterResponseDTO> getHeadmasters() {
@@ -51,11 +55,15 @@ public class HeadmasterService {
             return null;
         }
 
-        if(toUpdate.getSchool().getId() != headmasterDTO.getSchool()) {
-            School school = schoolRepository.findById(headmasterDTO.getSchool()).orElse(null);
-            if(school != null) {
-                toUpdate.setSchool(school);
+        School school = schoolRepository.findById(headmasterDTO.getSchool()).orElse(null);
+
+        if(school != null) {
+            if(toUpdate.getSchool() != null) {
+                School oldSchool = toUpdate.getSchool();
+                oldSchool.setHeadmaster(null);
             }
+            toUpdate.setSchool(school);
+            school.setHeadmaster(toUpdate);
         }
 
         toUpdate.setName(headmasterDTO.getName());
@@ -64,7 +72,11 @@ public class HeadmasterService {
         toUpdate.setNationalIdNumber(headmasterDTO.getNationalIdNumber());
         toUpdate.setUsername(headmasterDTO.getUsername());
 
-        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(headmasterRepository.save(toUpdate));
+        Headmaster updatedHeadmaster = headmasterRepository.save(toUpdate);
+        // updatedHeadmaster.getSchool().setHeadmaster(updatedHeadmaster);
+        // schoolRepository.save(updatedHeadmaster.getSchool());
+
+        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(updatedHeadmaster);
     }
 
     public void deleteHeadmaster(UUID id) {
