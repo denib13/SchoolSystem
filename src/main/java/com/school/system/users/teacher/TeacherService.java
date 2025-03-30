@@ -37,11 +37,11 @@ public class TeacherService {
         toCreate.setEmail(teacherDTO.getEmail());
         toCreate.setSchools(schools);
 
-        return TeacherMapper.INSTANCE.teacherToTeacherResponseDTO(teacherRepository.save(toCreate));
+        return TeacherMapper.teacherToTeacherResponseDTO(teacherRepository.save(toCreate));
     }
 
     public List<TeacherResponseDTO> getTeachers() {
-        return TeacherMapper.INSTANCE.teacherListToTeacherResponseDTOList(teacherRepository.findAll());
+        return TeacherMapper.teacherListToTeacherResponseDTOList(teacherRepository.findAll());
     }
 
     public TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO teacherDTO) {
@@ -61,7 +61,7 @@ public class TeacherService {
         toUpdate.setUsername(teacherDTO.getUsername());
         toUpdate.setSchools(schools);
 
-        return TeacherMapper.INSTANCE.teacherToTeacherResponseDTO(teacherRepository.save(toUpdate));
+        return TeacherMapper.teacherToTeacherResponseDTO(teacherRepository.save(toUpdate));
     }
 
     public void deleteTeacher(UUID id) {

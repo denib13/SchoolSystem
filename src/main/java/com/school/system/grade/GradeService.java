@@ -40,11 +40,11 @@ public class GradeService {
         toCreate.setSchool(school);
         toCreate.setStudents(students);
 
-        return GradeMapper.INSTANCE.gradeToGradeResponseDTO(gradeRepository.save(toCreate));
+        return GradeMapper.gradeToGradeResponseDTO(gradeRepository.save(toCreate));
     }
 
     public List<GradeResponseDTO> getGrades() {
-        return GradeMapper.INSTANCE.gradeListToGradeResponseDTOList(gradeRepository.findAll());
+        return GradeMapper.gradeListToGradeResponseDTOList(gradeRepository.findAll());
     }
 
 //    public List<Grade> getGradesBySchool(UUID schoolId) {
@@ -72,7 +72,7 @@ public class GradeService {
         toUpdate.setGroup(gradeDTO.group().charAt(0));
         toUpdate.setStudents(students);
 
-        return GradeMapper.INSTANCE.gradeToGradeResponseDTO(gradeRepository.save(toUpdate));
+        return GradeMapper.gradeToGradeResponseDTO(gradeRepository.save(toUpdate));
     }
 
     public void deleteGrade(UUID id) {

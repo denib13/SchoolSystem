@@ -52,7 +52,7 @@ public class SchoolService {
         toCreate.setTeachers(teachers);
         toCreate.setStudents(students);
 
-        return SchoolMapper.INSTANCE.schoolToSchoolResponseDTO(schoolRepository.save(toCreate));
+        return SchoolMapper.schoolToSchoolResponseDTO(schoolRepository.save(toCreate));
     }
 
     public SchoolResponseDTO updateSchool(UUID id, SchoolRequestDTO schoolDTO) {
@@ -80,11 +80,11 @@ public class SchoolService {
         toUpdate.setTeachers(teachers);
         toUpdate.setStudents(students);
 
-        return SchoolMapper.INSTANCE.schoolToSchoolResponseDTO(schoolRepository.save(toUpdate));
+        return SchoolMapper.schoolToSchoolResponseDTO(schoolRepository.save(toUpdate));
     }
 
     public List<SchoolResponseDTO> getSchools() {
-        return SchoolMapper.INSTANCE.schoolListToSchoolResponseDTOList(schoolRepository.findAll());
+        return SchoolMapper.schoolListToSchoolResponseDTOList(schoolRepository.findAll());
     }
 
     public void deleteSchool(UUID id) {

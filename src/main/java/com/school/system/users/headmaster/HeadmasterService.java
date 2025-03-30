@@ -41,11 +41,11 @@ public class HeadmasterService {
         school.setHeadmaster(newHeadmaster);
         schoolRepository.save(school);
 
-        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(newHeadmaster);
+        return HeadmasterMapper.headmasterToHeadmasterResponseDTO(newHeadmaster);
     }
 
     public List<HeadmasterResponseDTO> getHeadmasters() {
-        return HeadmasterMapper.INSTANCE.headmasterListToHeadmasterResponseDTOList(headmasterRepository.findAll());
+        return HeadmasterMapper.headmasterListToHeadmasterResponseDTOList(headmasterRepository.findAll());
     }
 
     public HeadmasterResponseDTO updateHeadmaster(UUID id, HeadmasterRequestDTO headmasterDTO) {
@@ -76,7 +76,7 @@ public class HeadmasterService {
         // updatedHeadmaster.getSchool().setHeadmaster(updatedHeadmaster);
         // schoolRepository.save(updatedHeadmaster.getSchool());
 
-        return HeadmasterMapper.INSTANCE.headmasterToHeadmasterResponseDTO(updatedHeadmaster);
+        return HeadmasterMapper.headmasterToHeadmasterResponseDTO(updatedHeadmaster);
     }
 
     public void deleteHeadmaster(UUID id) {

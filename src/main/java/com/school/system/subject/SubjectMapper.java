@@ -1,13 +1,35 @@
 package com.school.system.subject;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import com.school.system.grade.GradeMapper;
+import com.school.system.grade.GradeResponseDTO;
+import com.school.system.users.teacher.TeacherMapper;
+import com.school.system.users.teacher.TeacherResponseDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper
-public interface SubjectMapper {
-    SubjectMapper INSTANCE = Mappers.getMapper(SubjectMapper.class);
-    SubjectResponseDTO subjectToSubjectResponseDTO(Subject subject);
-    List<SubjectResponseDTO> subjectListToSubjectResponseDTOList(List<Subject> subjects);
+public class SubjectMapper {
+    public static SubjectResponseDTO subjectToSubjectResponseDTO(Subject subject) {
+        if(subject == null) {
+            return null;
+        }
+
+        TeacherResponseDTO teacher = TeacherMapper.teacherToTeacherResponseDTO(subject.getTeacher());
+        GradeResponseDTO schoolClass = GradeMapper.gradeToGradeResponseDTO(subject.getSchoolClass());
+
+        return SubjectResponseDTO
+                .builder()
+                .name(subject.getName())
+                .semester(subject.getSemester())
+                .teacher(teacher)
+                .schoolClass(schoolClass)
+                .build();
+    }
+
+    public static List<SubjectResponseDTO> subjectListToSubjectResponseDTOList(List<Subject> subjects) {
+        return subjects
+                .stream()
+                .map(SubjectMapper::subjectToSubjectResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

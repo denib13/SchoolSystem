@@ -48,11 +48,11 @@ public class MarkService {
         toCreate.setValue(markDTO.value());
         toCreate.setCreatedAt(LocalDateTime.now());
 
-        return MarkMapper.INSTANCE.markToMarkResponseDTO(markRepository.save(toCreate));
+        return MarkMapper.markToMarkResponseDTO(markRepository.save(toCreate));
     }
 
     public List<MarkResponseDTO> getMarks() {
-        return MarkMapper.INSTANCE.markListToMarkResponseDTOList(markRepository.findAll());
+        return MarkMapper.markListToMarkResponseDTOList(markRepository.findAll());
     }
 
     public MarkResponseDTO updateMark(UUID id, MarkRequestDTO markDTO) {
@@ -85,7 +85,7 @@ public class MarkService {
 
         toUpdate.setValue(markDTO.value());
 
-        return MarkMapper.INSTANCE.markToMarkResponseDTO(markRepository.save(toUpdate));
+        return MarkMapper.markToMarkResponseDTO(markRepository.save(toUpdate));
     }
 
     public void deleteMark(UUID id) {

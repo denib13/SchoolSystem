@@ -35,7 +35,7 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Mark> marks;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Absence> createdAbsences;
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
