@@ -14,9 +14,9 @@ public record SubjectRequestDTO(
         @NotNull(message = "Subject: Semester cannot be null")
         @Range(min = 1, max = 2, message = "Subject: Semester must be either 1 or 2")
         Integer semester,
-        @NotNull
+        @NotNull(message = "Subject: Teacher cannot be null")
         UUID teacher,
-        @NotNull
+        @NotNull(message = "Subject: School class cannot be null")
         UUID schoolClass
 ) {
 }
