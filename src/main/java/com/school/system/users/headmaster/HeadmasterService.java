@@ -1,5 +1,6 @@
 package com.school.system.users.headmaster;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,8 @@ public class HeadmasterService {
     public HeadmasterResponseDTO createHeadmaster(HeadmasterRequestDTO headmasterDTO) {
         Headmaster toCreate = new Headmaster();
 
-        School school = schoolRepository.findById(headmasterDTO.getSchool()).orElse(null);
-        if(school == null) {
-            return null;
-        }
+        School school = schoolRepository.findById(headmasterDTO.getSchool())
+                .orElseThrow(() -> new NotFoundException("School not found"));
 
         toCreate.setName(headmasterDTO.getName());
         toCreate.setMiddleName(headmasterDTO.getMiddleName());
@@ -49,22 +48,18 @@ public class HeadmasterService {
     }
 
     public HeadmasterResponseDTO updateHeadmaster(UUID id, HeadmasterRequestDTO headmasterDTO) {
-        Headmaster toUpdate = headmasterRepository.findById(id).orElse(null);
+        Headmaster toUpdate = headmasterRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Headmaster not found"));
 
-        if(toUpdate == null) {
-            return null;
+        School school = schoolRepository.findById(headmasterDTO.getSchool())
+                .orElseThrow(() -> new NotFoundException("School not found"));
+
+        if(toUpdate.getSchool() != null) {
+            School oldSchool = toUpdate.getSchool();
+            oldSchool.setHeadmaster(null);
         }
-
-        School school = schoolRepository.findById(headmasterDTO.getSchool()).orElse(null);
-
-        if(school != null) {
-            if(toUpdate.getSchool() != null) {
-                School oldSchool = toUpdate.getSchool();
-                oldSchool.setHeadmaster(null);
-            }
-            toUpdate.setSchool(school);
-            school.setHeadmaster(toUpdate);
-        }
+        toUpdate.setSchool(school);
+        school.setHeadmaster(toUpdate);
 
         toUpdate.setName(headmasterDTO.getName());
         toUpdate.setMiddleName(headmasterDTO.getMiddleName());
@@ -73,17 +68,13 @@ public class HeadmasterService {
         toUpdate.setUsername(headmasterDTO.getUsername());
 
         Headmaster updatedHeadmaster = headmasterRepository.save(toUpdate);
-        // updatedHeadmaster.getSchool().setHeadmaster(updatedHeadmaster);
-        // schoolRepository.save(updatedHeadmaster.getSchool());
 
         return HeadmasterMapper.headmasterToHeadmasterResponseDTO(updatedHeadmaster);
     }
 
     public void deleteHeadmaster(UUID id) {
-        Headmaster toDelete = headmasterRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Headmaster toDelete = headmasterRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Headmaster not found"));
         headmasterRepository.delete(toDelete);
     }
 }
