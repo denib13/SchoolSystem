@@ -1,5 +1,6 @@
 package com.school.system.subject;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.grade.Grade;
 import com.school.system.grade.GradeRepository;
 import com.school.system.users.teacher.Teacher;
@@ -28,24 +29,16 @@ public class SubjectService {
     public SubjectResponseDTO createSubject(SubjectRequestDTO subjectDTO) {
         Subject toCreate = new Subject();
 
-        Teacher teacher = subjectDTO.teacher() != null
-                ? teacherRepository.findById(subjectDTO.teacher()).orElse(null)
-                : null;
+        Teacher teacher = teacherRepository.findById(subjectDTO.teacher())
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
 
-        Grade grade = subjectDTO.schoolClass() != null
-                ? gradeRepository.findById(subjectDTO.schoolClass()).orElse(null)
-                : null;
+        Grade grade = gradeRepository.findById(subjectDTO.schoolClass())
+                .orElseThrow(() -> new NotFoundException("School class not found"));
 
         toCreate.setName(subjectDTO.name());
         toCreate.setSemester(subjectDTO.semester());
-
-        if(teacher != null) {
-            toCreate.setTeacher(teacher);
-        }
-
-        if(grade != null) {
-            toCreate.setSchoolClass(grade);
-        }
+        toCreate.setTeacher(teacher);
+        toCreate.setSchoolClass(grade);
 
         return SubjectMapper.subjectToSubjectResponseDTO(subjectRepository.save(toCreate));
     }
@@ -55,41 +48,29 @@ public class SubjectService {
     }
 
     public SubjectResponseDTO updateSubject(UUID id, SubjectRequestDTO subjectDTO) {
-        Subject toUpdate = subjectRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Subject toUpdate = subjectRepository.findById(id).orElseThrow(() -> new NotFoundException("Subject not found"));
 
         toUpdate.setName(subjectDTO.name());
         toUpdate.setSemester(subjectDTO.semester());
 
         if(subjectDTO.teacher() != toUpdate.getTeacher().getId()) {
-            Teacher teacher = subjectDTO.teacher() != null
-                    ? teacherRepository.findById(subjectDTO.teacher()).orElse(null)
-                    : null;
-            if(teacher != null) {
-                toUpdate.setTeacher(teacher);
-            }
+            Teacher teacher = teacherRepository.findById(subjectDTO.teacher())
+                    .orElseThrow(() -> new NotFoundException("Teacher not found"));
+            toUpdate.setTeacher(teacher);
         }
 
         if(subjectDTO.schoolClass() != toUpdate.getSchoolClass().getId()) {
-            Grade grade = subjectDTO.schoolClass() != null
-                    ? gradeRepository.findById(subjectDTO.schoolClass()).orElse(null)
-                    : null;
-            if(grade != null) {
-                toUpdate.setSchoolClass(grade);
-            }
+            Grade grade = gradeRepository.findById(subjectDTO.schoolClass())
+                    .orElseThrow(() -> new NotFoundException("School class not found"));
+            toUpdate.setSchoolClass(grade);
         }
 
         return SubjectMapper.subjectToSubjectResponseDTO(subjectRepository.save(toUpdate));
     }
 
     public void deleteSubject(UUID id) {
-        Subject toDelete = subjectRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Subject toDelete = subjectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subject not found"));
         subjectRepository.delete(toDelete);
     }
 }
