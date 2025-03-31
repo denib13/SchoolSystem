@@ -1,5 +1,6 @@
 package com.school.system.absence;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.subject.Subject;
 import com.school.system.subject.SubjectRepository;
 import com.school.system.users.parents.Parent;
@@ -35,13 +36,12 @@ public class AbsenceService {
     public AbsenceResponseDTO createAbsence(AbsenceRequestDTO absenceDTO) {
         Absence toCreate = new Absence();
 
-        Teacher teacher = teacherRepository.findById(absenceDTO.teacher()).orElse(null);
-        Student student = studentRepository.findById(absenceDTO.student()).orElse(null);
-        Subject subject = subjectRepository.findById(absenceDTO.subject()).orElse(null);
-
-        if(teacher == null || student == null || subject == null) {
-            return null;
-        }
+        Teacher teacher = teacherRepository.findById(absenceDTO.teacher())
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
+        Student student = studentRepository.findById(absenceDTO.student())
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+        Subject subject = subjectRepository.findById(absenceDTO.subject())
+                .orElseThrow(() -> new NotFoundException("Subject not found"));
 
         toCreate.setTeacher(teacher);
         toCreate.setStudent(student);
@@ -56,42 +56,33 @@ public class AbsenceService {
     }
 
     public AbsenceResponseDTO updateAbsence(UUID id, AbsenceRequestDTO absenceDTO) {
-        Absence toUpdate = absenceRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Absence toUpdate = absenceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Absence not found"));
 
         if(toUpdate.getTeacher().getId() != absenceDTO.teacher()) {
-            Teacher teacher = teacherRepository.findById(absenceDTO.teacher()).orElse(null);
-            if(teacher != null) {
-                toUpdate.setTeacher(teacher);
-            }
+            Teacher teacher = teacherRepository.findById(absenceDTO.teacher())
+                    .orElseThrow(() -> new NotFoundException("Teacher not found"));
+            toUpdate.setTeacher(teacher);
         }
 
         if(toUpdate.getStudent().getId() != absenceDTO.student()) {
-            Student student = studentRepository.findById(absenceDTO.student()).orElse(null);
-            if(student != null) {
-                toUpdate.setStudent(student);
-            }
+            Student student = studentRepository.findById(absenceDTO.student())
+                    .orElseThrow(() -> new NotFoundException("Student not found"));
+            toUpdate.setStudent(student);
         }
 
         if(toUpdate.getSubject().getId() != absenceDTO.subject()) {
-            Subject subject = subjectRepository.findById(absenceDTO.subject()).orElse(null);
-            if(subject != null) {
-                toUpdate.setSubject(subject);
-            }
+            Subject subject = subjectRepository.findById(absenceDTO.subject())
+                    .orElseThrow(() -> new NotFoundException("Subject not found"));
+            toUpdate.setSubject(subject);
         }
 
         return AbsenceMapper.absenceToAbsenceResponseDTO(absenceRepository.save(toUpdate));
     }
 
     public void deleteAbsence(UUID id) {
-        Absence toDelete = absenceRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Absence toDelete = absenceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Absence not found"));
         absenceRepository.delete(toDelete);
-
     }
 }
