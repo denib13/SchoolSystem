@@ -18,6 +18,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class StudentRequestDTO extends UserRequestDTO {
     private List<UUID> parents;
+    @NotNull(message = "Student: School cannot be null")
     private UUID school;
+    @NotNull(message = "Student: School class cannot be null")
     private UUID schoolClass;
 }
