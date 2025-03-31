@@ -1,5 +1,6 @@
 package com.school.system.users.teacher;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,8 @@ public class TeacherService {
     }
 
     public TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO teacherDTO) {
-        Teacher toUpdate = teacherRepository.findById(id).orElse(null);
-        if(toUpdate == null) {
-            return null;
-        }
+        Teacher toUpdate = teacherRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
 
         List<School> schools = teacherDTO.getSchools() != null
                 ? schoolRepository.findAllById(teacherDTO.getSchools())
@@ -65,10 +64,8 @@ public class TeacherService {
     }
 
     public void deleteTeacher(UUID id) {
-        Teacher toDelete = teacherRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Teacher toDelete = teacherRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
         teacherRepository.delete(toDelete);
     }
 }
