@@ -1,5 +1,6 @@
 package com.school.system.users.parents;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,8 @@ public class ParentService {
     }
 
     public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO) {
-        Parent toUpdate = parentRepository.findById(id).orElse(null);
-        if(toUpdate == null) {
-            return null;
-        }
+        Parent toUpdate = parentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Parent not found"));
 
         List<Student> children = parentDTO.getChildren() != null
                 ? studentRepository.findAllById(parentDTO.getChildren())
@@ -64,10 +63,8 @@ public class ParentService {
     }
 
     public void deleteParent(UUID id) {
-        Parent toDelete = parentRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Parent toDelete = parentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Parent not found"));
         parentRepository.delete(toDelete);
     }
 }
