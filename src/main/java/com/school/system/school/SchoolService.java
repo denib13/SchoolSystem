@@ -1,5 +1,6 @@
 package com.school.system.school;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.grade.Grade;
 import com.school.system.grade.GradeRepository;
 import com.school.system.users.student.Student;
@@ -56,11 +57,8 @@ public class SchoolService {
     }
 
     public SchoolResponseDTO updateSchool(UUID id, SchoolRequestDTO schoolDTO) {
-        School toUpdate = schoolRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        School toUpdate = schoolRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("School not found"));
 
         List<Grade> classes = schoolDTO.classes() != null
                 ? gradeRepository.findAllById(schoolDTO.classes())
@@ -88,10 +86,8 @@ public class SchoolService {
     }
 
     public void deleteSchool(UUID id) {
-        School toDelete = schoolRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        School toDelete = schoolRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("School not found"));
         schoolRepository.delete(toDelete);
     }
 }
