@@ -4,6 +4,9 @@ import com.school.system.exception.NotFoundException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,8 +46,10 @@ public class HeadmasterService {
         return HeadmasterMapper.headmasterToHeadmasterResponseDTO(newHeadmaster);
     }
 
-    public List<HeadmasterResponseDTO> getHeadmasters() {
-        return HeadmasterMapper.headmasterListToHeadmasterResponseDTOList(headmasterRepository.findAll());
+    public Page<HeadmasterResponseDTO> getHeadmasters(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Headmaster> headmasters = headmasterRepository.findAll(pageable);
+        return headmasters.map(headmaster -> HeadmasterMapper.headmasterToHeadmasterResponseDTO(headmaster));
     }
 
     public HeadmasterResponseDTO updateHeadmaster(UUID id, HeadmasterRequestDTO headmasterDTO) {

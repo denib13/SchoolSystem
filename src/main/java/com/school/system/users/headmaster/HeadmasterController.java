@@ -2,6 +2,7 @@ package com.school.system.users.headmaster;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,11 @@ public class HeadmasterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<HeadmasterResponseDTO>> getHeadmasters() {
-        return new ResponseEntity<>(headmasterService.getHeadmasters(), HttpStatus.OK);
+    public ResponseEntity<Page<HeadmasterResponseDTO>> getHeadmasters(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(headmasterService.getHeadmasters(pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
