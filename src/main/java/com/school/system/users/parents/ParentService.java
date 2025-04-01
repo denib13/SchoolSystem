@@ -4,6 +4,9 @@ import com.school.system.exception.NotFoundException;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,8 +43,10 @@ public class ParentService {
         return ParentMapper.parentToParentResponseDTO(parentRepository.save(toCreate));
     }
 
-    public List<ParentResponseDTO> getParents() {
-        return ParentMapper.parentListToParentResponseDTOList(parentRepository.findAll());
+    public Page<ParentResponseDTO> getParents(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Parent> parents = parentRepository.findAll(pageable);
+        return parents.map(parent -> ParentMapper.parentToParentResponseDTO(parent));
     }
 
     public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO) {
