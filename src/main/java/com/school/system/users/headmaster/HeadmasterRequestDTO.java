@@ -12,6 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HeadmasterRequestDTO extends UserRequestDTO {
-    @NotNull(message = "Headmaster: School cannot be null")
+    @NotNull(message = "School cannot be null")
     private UUID school;
 }

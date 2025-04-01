@@ -70,7 +70,7 @@ public class StudentService {
 
         if(studentDTO.getSchool() != toUpdate.getSchool().getId()) {
             School school = schoolRepository.findById(studentDTO.getSchool())
-                    .orElseThrow(() -> new NotFoundException("School not found"))
+                    .orElseThrow(() -> new NotFoundException("School not found"));
             toUpdate.setSchool(school);
         }
 
