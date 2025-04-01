@@ -2,6 +2,7 @@ package com.school.system.mark;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,11 @@ public class MarkController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MarkResponseDTO>> getMarks() {
-        return new ResponseEntity<>(markService.getMarks(), HttpStatus.OK);
+    public ResponseEntity<Page<MarkResponseDTO>> getMarks(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(markService.getMarks(pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

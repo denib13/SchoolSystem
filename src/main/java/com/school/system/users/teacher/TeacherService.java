@@ -4,6 +4,9 @@ import com.school.system.exception.NotFoundException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -41,8 +44,10 @@ public class TeacherService {
         return TeacherMapper.teacherToTeacherResponseDTO(teacherRepository.save(toCreate));
     }
 
-    public List<TeacherResponseDTO> getTeachers() {
-        return TeacherMapper.teacherListToTeacherResponseDTOList(teacherRepository.findAll());
+    public Page<TeacherResponseDTO> getTeachers(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Teacher> teachers = teacherRepository.findAll(pageable);
+        return teachers.map(teacher -> TeacherMapper.teacherToTeacherResponseDTO(teacher));
     }
 
     public TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO teacherDTO) {

@@ -2,6 +2,7 @@ package com.school.system.users.parents;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,11 @@ public class ParentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ParentResponseDTO>> getParents() {
-        return new ResponseEntity<>(parentService.getParents(), HttpStatus.OK);
+    public ResponseEntity<Page<ParentResponseDTO>> getParents(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(parentService.getParents(pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

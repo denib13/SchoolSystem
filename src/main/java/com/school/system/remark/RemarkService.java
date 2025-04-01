@@ -8,6 +8,9 @@ import com.school.system.users.student.StudentRepository;
 import com.school.system.users.teacher.Teacher;
 import com.school.system.users.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,8 +55,10 @@ public class RemarkService {
         return RemarkMapper.remarkToRemarkResponseDTO(remarkRepository.save(toCreate));
     }
 
-    public List<RemarkResponseDTO> getRemarks() {
-        return RemarkMapper.remarkListToRemarkResponseDTOList(remarkRepository.findAll());
+    public Page<RemarkResponseDTO> getRemarks(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Remark> remarks = remarkRepository.findAll(pageable);
+        return remarks.map(remark -> RemarkMapper.remarkToRemarkResponseDTO(remark));
     }
 
     public RemarkResponseDTO updateRemark(UUID id, RemarkRequestDTO remarkDTO) {

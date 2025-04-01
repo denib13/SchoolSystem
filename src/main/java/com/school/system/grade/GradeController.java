@@ -2,6 +2,7 @@ package com.school.system.grade;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,11 @@ public class GradeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GradeResponseDTO>> getGrades() {
-        return new ResponseEntity<>(gradeService.getGrades(), HttpStatus.OK);
+    public ResponseEntity<Page<GradeResponseDTO>> getGrades(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(gradeService.getGrades(pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

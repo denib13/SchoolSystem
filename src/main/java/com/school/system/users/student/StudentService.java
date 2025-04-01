@@ -8,6 +8,9 @@ import com.school.system.school.SchoolRepository;
 import com.school.system.users.parents.Parent;
 import com.school.system.users.parents.ParentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,8 +59,10 @@ public class StudentService {
         return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toCreate));
     }
 
-    public List<StudentResponseDTO> getStudents() {
-        return StudentMapper.studentListToStudentResponseDTOList(studentRepository.findAll());
+    public Page<StudentResponseDTO> getStudents(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Student> students = studentRepository.findAll(pageable);
+        return students.map(student -> StudentMapper.studentToStudentResponseDTO(student));
     }
 
     public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO) {

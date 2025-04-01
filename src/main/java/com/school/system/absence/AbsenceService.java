@@ -9,6 +9,9 @@ import com.school.system.users.student.StudentRepository;
 import com.school.system.users.teacher.Teacher;
 import com.school.system.users.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,8 +54,10 @@ public class AbsenceService {
         return AbsenceMapper.absenceToAbsenceResponseDTO(absenceRepository.save(toCreate));
     }
 
-    public List<AbsenceResponseDTO> getAbsences() {
-        return AbsenceMapper.absenceListToAbsenceResponseDTOList(absenceRepository.findAll());
+    public Page<AbsenceResponseDTO> getAbsences(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Absence> absences = absenceRepository.findAll(pageable);
+        return absences.map(absence -> AbsenceMapper.absenceToAbsenceResponseDTO(absence));
     }
 
     public AbsenceResponseDTO updateAbsence(UUID id, AbsenceRequestDTO absenceDTO) {

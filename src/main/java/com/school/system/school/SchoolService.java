@@ -8,6 +8,9 @@ import com.school.system.users.student.StudentRepository;
 import com.school.system.users.teacher.Teacher;
 import com.school.system.users.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -81,8 +84,10 @@ public class SchoolService {
         return SchoolMapper.schoolToSchoolResponseDTO(schoolRepository.save(toUpdate));
     }
 
-    public List<SchoolResponseDTO> getSchools() {
-        return SchoolMapper.schoolListToSchoolResponseDTOList(schoolRepository.findAll());
+    public Page<SchoolResponseDTO> getSchools(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<School> schools = schoolRepository.findAll(pageable);
+        return schools.map(school -> SchoolMapper.schoolToSchoolResponseDTO(school));
     }
 
     public void deleteSchool(UUID id) {
