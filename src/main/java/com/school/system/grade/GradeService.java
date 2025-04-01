@@ -1,5 +1,6 @@
 package com.school.system.grade;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import com.school.system.users.student.Student;
@@ -30,7 +31,8 @@ public class GradeService {
     public GradeResponseDTO createGrade(GradeRequestDTO gradeDTO) {
         Grade toCreate = new Grade();
 
-        School school = schoolRepository.findById(gradeDTO.school()).orElse(null);
+        School school = schoolRepository.findById(gradeDTO.school())
+                .orElseThrow(() -> new NotFoundException("School not found"));
         List<Student> students = gradeDTO.students() != null
                 ? studentRepository.findAllById(gradeDTO.students())
                 : new ArrayList<>();
@@ -52,21 +54,17 @@ public class GradeService {
 //    }
 
     public GradeResponseDTO updateGrade(UUID id, GradeRequestDTO gradeDTO) {
-        Grade toUpdate = gradeRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Grade toUpdate = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grade not found"));
 
         List<Student> students = gradeDTO.students() != null
                 ? studentRepository.findAllById(gradeDTO.students())
                 : new LinkedList<>();
 
         if(toUpdate.getSchool().getId() != gradeDTO.school()) {
-            School school = schoolRepository.findById(gradeDTO.school()).orElse(null);
-            if(school != null) {
-                toUpdate.setSchool(school);
-            }
+            School school = schoolRepository.findById(gradeDTO.school())
+                    .orElseThrow(() -> new NotFoundException("School not found"));
+            toUpdate.setSchool(school);
         }
         toUpdate.setYear(gradeDTO.year());
         toUpdate.setGroup(gradeDTO.group().charAt(0));
@@ -76,10 +74,8 @@ public class GradeService {
     }
 
     public void deleteGrade(UUID id) {
-        Grade toDelete = gradeRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Grade toDelete = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grade not found"));
         gradeRepository.delete(toDelete);
     }
 }

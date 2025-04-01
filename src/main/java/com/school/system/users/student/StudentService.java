@@ -1,5 +1,6 @@
 package com.school.system.users.student;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.grade.Grade;
 import com.school.system.grade.GradeRepository;
 import com.school.system.school.School;
@@ -35,12 +36,10 @@ public class StudentService {
         List<Parent> parents = studentDTO.getParents() != null
                 ? parentRepository.findAllById(studentDTO.getParents())
                 : new ArrayList<>();
-        School school = studentDTO.getSchool() != null
-                ? schoolRepository.findById(studentDTO.getSchool()).orElse(null)
-                : null;
-        Grade schoolClass = studentDTO.getSchoolClass() != null
-                ? gradeRepository.findById(studentDTO.getSchoolClass()).orElse(null)
-                : null;
+        School school = schoolRepository.findById(studentDTO.getSchool())
+                .orElseThrow(() -> new NotFoundException("School not found"));
+        Grade schoolClass = gradeRepository.findById(studentDTO.getSchoolClass())
+                .orElseThrow(() -> new NotFoundException("School class not found"));
 
         Student toCreate = new Student();
         toCreate.setName(studentDTO.getName());
@@ -51,12 +50,8 @@ public class StudentService {
         toCreate.setPassword(studentDTO.getPassword());
         toCreate.setEmail(studentDTO.getEmail());
         toCreate.setParents(parents);
-        if(school != null) {
-            toCreate.setSchool(school);
-        }
-        if(schoolClass != null) {
-            toCreate.setSchoolClass(schoolClass);
-        }
+        toCreate.setSchool(school);
+        toCreate.setSchoolClass(schoolClass);
 
         return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toCreate));
     }
@@ -66,31 +61,23 @@ public class StudentService {
     }
 
     public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO) {
-        Student toUpdate = studentRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Student toUpdate = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
 
         List<Parent> parents = studentDTO.getParents() != null
                 ? parentRepository.findAllById(studentDTO.getParents())
                 : new ArrayList<>();
+
         if(studentDTO.getSchool() != toUpdate.getSchool().getId()) {
-            School school = studentDTO.getSchool() != null
-                    ? schoolRepository.findById(studentDTO.getSchool()).orElse(null)
-                    : null;
-            if(school != null) {
-                toUpdate.setSchool(school);
-            }
+            School school = schoolRepository.findById(studentDTO.getSchool())
+                    .orElseThrow(() -> new NotFoundException("School not found"));
+            toUpdate.setSchool(school);
         }
 
         if(studentDTO.getSchoolClass() != toUpdate.getSchoolClass().getId()) {
-            Grade schoolClass = studentDTO.getSchoolClass() != null
-                    ? gradeRepository.findById(studentDTO.getSchoolClass()).orElse(null)
-                    : null;
-            if(schoolClass != null) {
-                toUpdate.setSchoolClass(schoolClass);
-            }
+            Grade schoolClass = gradeRepository.findById(studentDTO.getSchoolClass())
+                    .orElseThrow(() -> new NotFoundException("School class not found"));
+            toUpdate.setSchoolClass(schoolClass);
         }
 
         toUpdate.setName(studentDTO.getName());
@@ -104,10 +91,8 @@ public class StudentService {
     }
 
     public void deleteStudent(UUID id) {
-        Student toDelete = studentRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Student toDelete = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
         studentRepository.delete(toDelete);
     }
 }

@@ -1,5 +1,6 @@
 package com.school.system.mark;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.subject.Subject;
 import com.school.system.subject.SubjectRepository;
 import com.school.system.users.student.Student;
@@ -34,13 +35,12 @@ public class MarkService {
     public MarkResponseDTO createMark(MarkRequestDTO markDTO) {
         Mark toCreate = new Mark();
 
-        Subject subject = subjectRepository.findById(markDTO.subject()).orElse(null);
-        Student student = studentRepository.findById(markDTO.student()).orElse(null);
-        Teacher teacher = teacherRepository.findById(markDTO.teacher()).orElse(null);
-
-        if(subject == null || student == null || teacher == null) {
-            return null;
-        }
+        Subject subject = subjectRepository.findById(markDTO.subject())
+                .orElseThrow(() -> new NotFoundException("Subject not found"));
+        Student student = studentRepository.findById(markDTO.student())
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+        Teacher teacher = teacherRepository.findById(markDTO.teacher())
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
 
         toCreate.setSubject(subject);
         toCreate.setStudent(student);
@@ -56,31 +56,25 @@ public class MarkService {
     }
 
     public MarkResponseDTO updateMark(UUID id, MarkRequestDTO markDTO) {
-        Mark toUpdate = markRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Mark toUpdate = markRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Mark not found"));
 
         if(markDTO.subject() != toUpdate.getSubject().getId()) {
-            Subject subject = subjectRepository.findById(markDTO.subject()).orElse(null);
-            if(subject != null) {
-                toUpdate.setSubject(subject);
-            }
+            Subject subject = subjectRepository.findById(markDTO.subject())
+                    .orElseThrow(() -> new NotFoundException("Subject not found"));
+            toUpdate.setSubject(subject);
         }
 
         if(markDTO.student() != toUpdate.getStudent().getId()) {
-            Student student = studentRepository.findById(markDTO.student()).orElse(null);
-            if(student != null) {
-                toUpdate.setStudent(student);
-            }
+            Student student = studentRepository.findById(markDTO.student())
+                    .orElseThrow(() -> new NotFoundException("Student not found"));
+            toUpdate.setStudent(student);
         }
 
         if(markDTO.teacher() != toUpdate.getTeacher().getId()) {
-            Teacher teacher = teacherRepository.findById(markDTO.teacher()).orElse(null);
-            if(teacher != null) {
-                toUpdate.setTeacher(teacher);
-            }
+            Teacher teacher = teacherRepository.findById(markDTO.teacher())
+                    .orElseThrow(() -> new NotFoundException("Teacher not found"));
+            toUpdate.setTeacher(teacher);
         }
 
         toUpdate.setValue(markDTO.value());
@@ -89,12 +83,8 @@ public class MarkService {
     }
 
     public void deleteMark(UUID id) {
-        Mark toDelete = markRepository.findById(id).orElse(null);
-
-        if(toDelete == null) {
-            return;
-        }
-
+        Mark toDelete = markRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Mark not found"));
         markRepository.delete(toDelete);
     }
 }

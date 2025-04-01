@@ -1,5 +1,6 @@
 package com.school.system.remark;
 
+import com.school.system.exception.NotFoundException;
 import com.school.system.subject.Subject;
 import com.school.system.subject.SubjectRepository;
 import com.school.system.users.student.Student;
@@ -34,13 +35,12 @@ public class RemarkService {
     public RemarkResponseDTO createRemark(RemarkRequestDTO remarkDTO) {
         Remark toCreate = new Remark();
 
-        Teacher teacher = teacherRepository.findById(remarkDTO.teacher()).orElse(null);
-        Student student = studentRepository.findById(remarkDTO.student()).orElse(null);
-        Subject subject = subjectRepository.findById(remarkDTO.subject()).orElse(null);
-
-        if(teacher == null || student == null || subject == null) {
-            return null;
-        }
+        Teacher teacher = teacherRepository.findById(remarkDTO.teacher())
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
+        Student student = studentRepository.findById(remarkDTO.student())
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+        Subject subject = subjectRepository.findById(remarkDTO.subject())
+                .orElseThrow(() -> new NotFoundException("Subject not found"));
 
         toCreate.setTeacher(teacher);
         toCreate.setStudent(student);
@@ -57,31 +57,25 @@ public class RemarkService {
     }
 
     public RemarkResponseDTO updateRemark(UUID id, RemarkRequestDTO remarkDTO) {
-        Remark toUpdate = remarkRepository.findById(id).orElse(null);
-
-        if(toUpdate == null) {
-            return null;
-        }
+        Remark toUpdate = remarkRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Remark not found"));
 
         if(toUpdate.getTeacher().getId() != remarkDTO.teacher()) {
-            Teacher teacher = teacherRepository.findById(remarkDTO.teacher()).orElse(null);
-            if(teacher != null) {
-                toUpdate.setTeacher(teacher);
-            }
+            Teacher teacher = teacherRepository.findById(remarkDTO.teacher())
+                    .orElseThrow(() -> new NotFoundException("Teacher not found"));
+            toUpdate.setTeacher(teacher);
         }
 
         if(toUpdate.getStudent().getId() != remarkDTO.student()) {
-            Student student = studentRepository.findById(remarkDTO.student()).orElse(null);
-            if(student != null) {
-                toUpdate.setStudent(student);
-            }
+            Student student = studentRepository.findById(remarkDTO.student())
+                    .orElseThrow(() -> new NotFoundException("Student not found"));
+            toUpdate.setStudent(student);
         }
 
         if(toUpdate.getSubject().getId() != remarkDTO.subject()) {
-            Subject subject = subjectRepository.findById(remarkDTO.subject()).orElse(null);
-            if(subject != null) {
-                toUpdate.setSubject(subject);
-            }
+            Subject subject = subjectRepository.findById(remarkDTO.subject())
+                    .orElseThrow(() -> new NotFoundException("Subject not found"));
+            toUpdate.setSubject(subject);
         }
 
         toUpdate.setHeading(remarkDTO.heading());
@@ -91,10 +85,8 @@ public class RemarkService {
     }
 
     public void deleteRemark(UUID id) {
-        Remark toDelete = remarkRepository.findById(id).orElse(null);
-        if(toDelete == null) {
-            return;
-        }
+        Remark toDelete = remarkRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Remark not found"));
         remarkRepository.delete(toDelete);
     }
 }
