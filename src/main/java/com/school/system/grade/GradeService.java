@@ -6,6 +6,9 @@ import com.school.system.school.SchoolRepository;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,8 +48,10 @@ public class GradeService {
         return GradeMapper.gradeToGradeResponseDTO(gradeRepository.save(toCreate));
     }
 
-    public List<GradeResponseDTO> getGrades() {
-        return GradeMapper.gradeListToGradeResponseDTOList(gradeRepository.findAll());
+    public Page<GradeResponseDTO> getGrades(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Grade> grades = gradeRepository.findAll(pageable);
+        return grades.map(grade -> GradeMapper.gradeToGradeResponseDTO(grade));
     }
 
 //    public List<Grade> getGradesBySchool(UUID schoolId) {
