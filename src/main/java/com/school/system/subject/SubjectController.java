@@ -2,6 +2,7 @@ package com.school.system.subject;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,11 @@ public class SubjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SubjectResponseDTO>> getSubjects() {
-        return new ResponseEntity<>(subjectService.getSubjects(), HttpStatus.OK);
+    public ResponseEntity<Page<SubjectResponseDTO>> getSubjects(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(subjectService.getSubjects(pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

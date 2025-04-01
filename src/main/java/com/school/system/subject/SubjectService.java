@@ -6,6 +6,9 @@ import com.school.system.grade.GradeRepository;
 import com.school.system.users.teacher.Teacher;
 import com.school.system.users.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,8 +46,10 @@ public class SubjectService {
         return SubjectMapper.subjectToSubjectResponseDTO(subjectRepository.save(toCreate));
     }
 
-    public List<SubjectResponseDTO> getSubjects() {
-        return SubjectMapper.subjectListToSubjectResponseDTOList(subjectRepository.findAll());
+    public Page<SubjectResponseDTO> getSubjects(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Subject> subjects = subjectRepository.findAll(pageable);
+        return subjects.map(subject -> SubjectMapper.subjectToSubjectResponseDTO(subject));
     }
 
     public SubjectResponseDTO updateSubject(UUID id, SubjectRequestDTO subjectDTO) {
