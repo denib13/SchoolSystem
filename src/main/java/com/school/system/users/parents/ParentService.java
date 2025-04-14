@@ -1,8 +1,15 @@
 package com.school.system.users.parents;
 
 import com.school.system.exception.NotFoundException;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +32,7 @@ public class ParentService {
         this.studentRepository = studentRepository;
     }
 
-    public ParentResponseDTO createParent(ParentRequestDTO parentDTO) {
+    public Parent createParent(ParentRequestDTO parentDTO) {
         List<Student> children = parentDTO.getChildren() != null
                 ? studentRepository.findAllById(parentDTO.getChildren())
                 : new ArrayList<>();
@@ -40,7 +47,7 @@ public class ParentService {
         toCreate.setEmail(parentDTO.getEmail());
         toCreate.setChildren(children);
 
-        return ParentMapper.parentToParentResponseDTO(parentRepository.save(toCreate));
+        return parentRepository.save(toCreate);
     }
 
     public Page<ParentResponseDTO> getParents(int pageNo, int pageSize) {
@@ -49,9 +56,24 @@ public class ParentService {
         return parents.map(parent -> ParentMapper.parentToParentResponseDTO(parent));
     }
 
-    public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO) {
+    public ParentResponseDTO getParent(UUID id, User user) {
+        Parent parent = parentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Parent not found"));
+
+        if(!ReadPolicy.canReadParent(user, parent)) {
+            throw new CannotReadException();
+        }
+
+        return ParentMapper.parentToParentResponseDTO(parent);
+    }
+
+    public ParentResponseDTO updateParent(UUID id, ParentRequestDTO parentDTO, User user) {
         Parent toUpdate = parentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Parent not found"));
+
+        if(!UpdatePolicy.canUpdateParent(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         List<Student> children = parentDTO.getChildren() != null
                 ? studentRepository.findAllById(parentDTO.getChildren())
@@ -67,9 +89,14 @@ public class ParentService {
         return ParentMapper.parentToParentResponseDTO(parentRepository.save(toUpdate));
     }
 
-    public void deleteParent(UUID id) {
+    public void deleteParent(UUID id, User user) {
         Parent toDelete = parentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Parent not found"));
+
+        if(!DeletePolicy.canDeleteParent(user)) {
+            throw new CannotDeleteException();
+        }
+
         parentRepository.delete(toDelete);
     }
 }

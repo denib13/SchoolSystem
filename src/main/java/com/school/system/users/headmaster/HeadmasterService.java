@@ -1,8 +1,15 @@
 package com.school.system.users.headmaster;
 
 import com.school.system.exception.NotFoundException;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +31,13 @@ public class HeadmasterService {
         this.schoolRepository = schoolRepository;
     }
 
-    public HeadmasterResponseDTO createHeadmaster(HeadmasterRequestDTO headmasterDTO) {
+    public Headmaster createHeadmaster(HeadmasterRequestDTO headmasterDTO) {
         Headmaster toCreate = new Headmaster();
 
-        School school = schoolRepository.findById(headmasterDTO.getSchool())
-                .orElseThrow(() -> new NotFoundException("School not found"));
+        School school = headmasterDTO.getSchool() != null
+                ? schoolRepository.findById(headmasterDTO.getSchool())
+                .orElseThrow(() -> new NotFoundException("School not found"))
+                : null;
 
         toCreate.setName(headmasterDTO.getName());
         toCreate.setMiddleName(headmasterDTO.getMiddleName());
@@ -37,13 +46,18 @@ public class HeadmasterService {
         toCreate.setUsername(headmasterDTO.getUsername());
         toCreate.setPassword(headmasterDTO.getPassword());
         toCreate.setEmail(headmasterDTO.getEmail());
-        toCreate.setSchool(school);
+
+        if(school != null) {
+            toCreate.setSchool(school);
+        }
 
         Headmaster newHeadmaster = headmasterRepository.save(toCreate);
-        school.setHeadmaster(newHeadmaster);
-        schoolRepository.save(school);
+        if(school != null) {
+            school.setHeadmaster(newHeadmaster);
+            schoolRepository.save(school);
+        }
 
-        return HeadmasterMapper.headmasterToHeadmasterResponseDTO(newHeadmaster);
+        return newHeadmaster;
     }
 
     public Page<HeadmasterResponseDTO> getHeadmasters(int pageNo, int pageSize) {
@@ -52,9 +66,24 @@ public class HeadmasterService {
         return headmasters.map(headmaster -> HeadmasterMapper.headmasterToHeadmasterResponseDTO(headmaster));
     }
 
-    public HeadmasterResponseDTO updateHeadmaster(UUID id, HeadmasterRequestDTO headmasterDTO) {
+    public HeadmasterResponseDTO getHeadmaster(UUID id, User user) {
+        Headmaster headmaster = headmasterRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Headmaster not found"));
+
+        if(!ReadPolicy.canReadHeadmaster(user, headmaster)) {
+            throw new CannotReadException();
+        }
+
+        return HeadmasterMapper.headmasterToHeadmasterResponseDTO(headmaster);
+    }
+
+    public HeadmasterResponseDTO updateHeadmaster(UUID id, HeadmasterRequestDTO headmasterDTO, User user) {
         Headmaster toUpdate = headmasterRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Headmaster not found"));
+
+        if(!UpdatePolicy.canUpdateHeadmaster(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         School school = schoolRepository.findById(headmasterDTO.getSchool())
                 .orElseThrow(() -> new NotFoundException("School not found"));
@@ -77,9 +106,20 @@ public class HeadmasterService {
         return HeadmasterMapper.headmasterToHeadmasterResponseDTO(updatedHeadmaster);
     }
 
-    public void deleteHeadmaster(UUID id) {
+    public void deleteHeadmaster(UUID id, User user) {
         Headmaster toDelete = headmasterRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Headmaster not found"));
+
+        if(!DeletePolicy.canDeleteHeadmaster(user)) {
+            throw new CannotDeleteException();
+        }
+
+        if(toDelete.getSchool() != null) {
+            School school = toDelete.getSchool();
+            school.setHeadmaster(null);
+            schoolRepository.save(school);
+        }
+
         headmasterRepository.delete(toDelete);
     }
 }

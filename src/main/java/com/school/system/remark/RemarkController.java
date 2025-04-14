@@ -1,10 +1,12 @@
 package com.school.system.remark;
 
+import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,9 @@ public class RemarkController {
     }
 
     @PostMapping
-    public ResponseEntity<RemarkResponseDTO> createRemark(@RequestBody @Valid RemarkRequestDTO remarkDTO) {
-        return new ResponseEntity<>(remarkService.createRemark(remarkDTO), HttpStatus.CREATED);
+    public ResponseEntity<RemarkResponseDTO> createRemark(@RequestBody @Valid RemarkRequestDTO remarkDTO,
+                                                          @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(remarkService.createRemark(remarkDTO, user), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -33,15 +36,23 @@ public class RemarkController {
         return new ResponseEntity<>(remarkService.getRemarks(pageNo, pageSize), HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<RemarkResponseDTO> getMark(@PathVariable("id") UUID id,
+                                                     @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(remarkService.getRemark(id, user), HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<RemarkResponseDTO> updateRemark(@PathVariable("id") UUID id,
-                                                          @RequestBody @Valid RemarkRequestDTO remarkDTO) {
-        return new ResponseEntity<>(remarkService.updateRemark(id, remarkDTO), HttpStatus.OK);
+                                                          @RequestBody @Valid RemarkRequestDTO remarkDTO,
+                                                          @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(remarkService.updateRemark(id, remarkDTO, user), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteRemark(@PathVariable("id") UUID id) {
-        remarkService.deleteRemark(id);
+    public ResponseEntity<Void> deleteRemark(@PathVariable("id") UUID id,
+                                             @AuthenticationPrincipal User user) {
+        remarkService.deleteRemark(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

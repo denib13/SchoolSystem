@@ -1,10 +1,12 @@
 package com.school.system.users.parents;
 
+import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,8 @@ public class ParentController {
 
     @PostMapping
     public ResponseEntity<ParentResponseDTO> createParent(@RequestBody @Valid ParentRequestDTO parentDTO) {
-        return new ResponseEntity<>(parentService.createParent(parentDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(ParentMapper.parentToParentResponseDTO(parentService.createParent(parentDTO)),
+                HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -33,15 +36,23 @@ public class ParentController {
         return new ResponseEntity<>(parentService.getParents(pageNo, pageSize), HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<ParentResponseDTO> getParent(@PathVariable("id") UUID id,
+                                                       @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(parentService.getParent(id, user), HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<ParentResponseDTO> updateParent(@PathVariable("id") UUID id,
-                                               @RequestBody @Valid ParentRequestDTO parentDTO) {
-        return new ResponseEntity<>(parentService.updateParent(id, parentDTO), HttpStatus.OK);
+                                               @RequestBody @Valid ParentRequestDTO parentDTO,
+                                               @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(parentService.updateParent(id, parentDTO, user), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteParent(@PathVariable("id") UUID id) {
-        parentService.deleteParent(id);
+    public ResponseEntity<Void> deleteParent(@PathVariable("id") UUID id,
+                                             @AuthenticationPrincipal User user) {
+        parentService.deleteParent(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

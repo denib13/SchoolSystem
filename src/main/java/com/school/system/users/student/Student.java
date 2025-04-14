@@ -5,6 +5,7 @@ import com.school.system.grade.Grade;
 import com.school.system.mark.Mark;
 import com.school.system.remark.Remark;
 import com.school.system.school.School;
+import com.school.system.users.Role;
 import com.school.system.users.parents.Parent;
 import com.school.system.users.user.User;
 import jakarta.persistence.*;
@@ -16,13 +17,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "students")
 public class Student extends User {
@@ -45,4 +48,88 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Remark> remarks;
+
+    public Student() {
+        this.setRole(Role.STUDENT);
+    }
+
+    public Student(UUID id,
+                   String name,
+                   String middleName,
+                   String surname,
+                   String nationalIdNumber,
+                   String username,
+                   String password,
+                   String email,
+                   School school,
+                   Grade schoolClass) {
+        super(id, name, middleName, surname, nationalIdNumber, username, password, email);
+        this.school = school;
+        this.schoolClass = schoolClass;
+        this.setRole(Role.STUDENT);
+    }
+
+    public Student(String name,
+                   String middleName,
+                   String surname,
+                   String nationalIdNumber,
+                   String username,
+                   String password,
+                   String email,
+                   School school,
+                   Grade schoolClass) {
+        super(name, middleName, surname, nationalIdNumber, username, password, email);
+        this.school = school;
+        this.schoolClass = schoolClass;
+        this.setRole(Role.STUDENT);
+    }
+
+    public Student(String name,
+                   String middleName,
+                   String surname,
+                   String nationalIdNumber,
+                   String username, String password,
+                   String email, List<Parent> parents,
+                   School school, Grade schoolClass,
+                   List<Mark> marks,
+                   List<Absence> absences,
+                   List<Remark> remarks) {
+        super(name, middleName, surname, nationalIdNumber, username, password, email);
+        this.parents = parents;
+        this.school = school;
+        this.schoolClass = schoolClass;
+        this.marks = marks;
+        this.absences = absences;
+        this.remarks = remarks;
+        this.setRole(Role.STUDENT);
+    }
+
+    public Student(UUID id,
+                   String name,
+                   String middleName,
+                   String surname,
+                   String nationalIdNumber,
+                   String username,
+                   String password,
+                   String email,
+                   List<Parent> parents,
+                   School school,
+                   Grade schoolClass,
+                   List<Mark> marks,
+                   List<Absence> absences,
+                   List<Remark> remarks) {
+        super(id, name, middleName, surname, nationalIdNumber, username, password, email);
+        this.parents = parents;
+        this.school = school;
+        this.schoolClass = schoolClass;
+        this.marks = marks;
+        this.absences = absences;
+        this.remarks = remarks;
+        this.setRole(Role.STUDENT);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.getRole().getAuthorities();
+    }
 }

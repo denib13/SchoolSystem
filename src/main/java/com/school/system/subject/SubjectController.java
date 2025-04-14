@@ -1,10 +1,12 @@
 package com.school.system.subject;
 
+import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,9 @@ public class SubjectController {
     }
 
     @PostMapping
-    public ResponseEntity<SubjectResponseDTO> createSubject(@RequestBody @Valid SubjectRequestDTO subjectDTO) {
-        return new ResponseEntity<>(subjectService.createSubject(subjectDTO), HttpStatus.CREATED);
+    public ResponseEntity<SubjectResponseDTO> createSubject(@RequestBody @Valid SubjectRequestDTO subjectDTO,
+                                                            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.createSubject(subjectDTO, user), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -33,15 +36,23 @@ public class SubjectController {
         return new ResponseEntity<>(subjectService.getSubjects(pageNo, pageSize), HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<SubjectResponseDTO> getSubject(@PathVariable("id") UUID id,
+                                                         @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.getSubject(id, user), HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<SubjectResponseDTO> updateSubject(@PathVariable("id") UUID id,
-                                                 @RequestBody @Valid SubjectRequestDTO subjectDTO) {
-        return new ResponseEntity<>(subjectService.updateSubject(id, subjectDTO), HttpStatus.OK);
+                                                 @RequestBody @Valid SubjectRequestDTO subjectDTO,
+                                                            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.updateSubject(id, subjectDTO, user), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteSubject(@PathVariable("id") UUID id) {
-        subjectService.deleteSubject(id);
+    public ResponseEntity<Void> deleteSubject(@PathVariable("id") UUID id,
+                                              @AuthenticationPrincipal User user) {
+        subjectService.deleteSubject(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,12 +1,21 @@
 package com.school.system.mark;
 
 import com.school.system.exception.NotFoundException;
+import com.school.system.policy.CreatePolicy;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotCreateException;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.subject.Subject;
 import com.school.system.subject.SubjectRepository;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
 import com.school.system.users.teacher.Teacher;
 import com.school.system.users.teacher.TeacherRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +44,7 @@ public class MarkService {
         this.teacherRepository = teacherRepository;
     }
 
-    public MarkResponseDTO createMark(MarkRequestDTO markDTO) {
+    public MarkResponseDTO createMark(MarkRequestDTO markDTO, User user) {
         Mark toCreate = new Mark();
 
         Subject subject = subjectRepository.findById(markDTO.subject())
@@ -51,6 +60,10 @@ public class MarkService {
         toCreate.setValue(markDTO.value());
         toCreate.setCreatedAt(LocalDateTime.now());
 
+        if(!CreatePolicy.canCreateMark(user, toCreate)) {
+            throw new CannotCreateException();
+        }
+
         return MarkMapper.markToMarkResponseDTO(markRepository.save(toCreate));
     }
 
@@ -60,9 +73,24 @@ public class MarkService {
         return marks.map(mark -> MarkMapper.markToMarkResponseDTO(mark));
     }
 
-    public MarkResponseDTO updateMark(UUID id, MarkRequestDTO markDTO) {
+    public MarkResponseDTO getMark(UUID id, User user) {
+        Mark mark = markRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Mark not found"));
+
+        if(!ReadPolicy.canReadMark(user, mark)) {
+            throw new CannotReadException();
+        }
+
+        return MarkMapper.markToMarkResponseDTO(mark);
+    }
+
+    public MarkResponseDTO updateMark(UUID id, MarkRequestDTO markDTO, User user) {
         Mark toUpdate = markRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mark not found"));
+
+        if(!UpdatePolicy.canUpdateMark(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         if(markDTO.subject() != toUpdate.getSubject().getId()) {
             Subject subject = subjectRepository.findById(markDTO.subject())
@@ -87,9 +115,14 @@ public class MarkService {
         return MarkMapper.markToMarkResponseDTO(markRepository.save(toUpdate));
     }
 
-    public void deleteMark(UUID id) {
+    public void deleteMark(UUID id, User user) {
         Mark toDelete = markRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mark not found"));
+
+        if(!DeletePolicy.canDeleteMark(user, toDelete)) {
+            throw new CannotDeleteException();
+        }
+
         markRepository.delete(toDelete);
     }
 }
