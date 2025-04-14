@@ -1,10 +1,19 @@
 package com.school.system.grade;
 
 import com.school.system.exception.NotFoundException;
+import com.school.system.policy.CreatePolicy;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotCreateException;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import com.school.system.users.student.Student;
 import com.school.system.users.student.StudentRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +40,7 @@ public class GradeService {
         this.studentRepository = studentRepository;
     }
 
-    public GradeResponseDTO createGrade(GradeRequestDTO gradeDTO) {
+    public GradeResponseDTO createGrade(GradeRequestDTO gradeDTO, User user) {
         Grade toCreate = new Grade();
 
         School school = schoolRepository.findById(gradeDTO.school())
@@ -45,6 +54,10 @@ public class GradeService {
         toCreate.setSchool(school);
         toCreate.setStudents(students);
 
+        if(!CreatePolicy.canCreateGrade(user, toCreate)) {
+            throw new CannotCreateException();
+        }
+
         return GradeMapper.gradeToGradeResponseDTO(gradeRepository.save(toCreate));
     }
 
@@ -54,13 +67,24 @@ public class GradeService {
         return grades.map(grade -> GradeMapper.gradeToGradeResponseDTO(grade));
     }
 
-//    public List<Grade> getGradesBySchool(UUID schoolId) {
-//
-//    }
+    public GradeResponseDTO getGrade(UUID id, User user) {
+        Grade grade = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("School class not found"));
 
-    public GradeResponseDTO updateGrade(UUID id, GradeRequestDTO gradeDTO) {
+        if(!ReadPolicy.canReadGrade(user, grade)) {
+            throw new CannotReadException();
+        }
+
+        return GradeMapper.gradeToGradeResponseDTO(grade);
+    }
+
+    public GradeResponseDTO updateGrade(UUID id, GradeRequestDTO gradeDTO, User user) {
         Grade toUpdate = gradeRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Grade not found"));
+                .orElseThrow(() -> new NotFoundException("School class not found"));
+
+        if(!UpdatePolicy.canUpdateGrade(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         List<Student> students = gradeDTO.students() != null
                 ? studentRepository.findAllById(gradeDTO.students())
@@ -78,9 +102,14 @@ public class GradeService {
         return GradeMapper.gradeToGradeResponseDTO(gradeRepository.save(toUpdate));
     }
 
-    public void deleteGrade(UUID id) {
+    public void deleteGrade(UUID id, User user) {
         Grade toDelete = gradeRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Grade not found"));
+                .orElseThrow(() -> new NotFoundException("School class not found"));
+
+        if(!DeletePolicy.canDeleteGrade(user, toDelete)) {
+            throw new CannotDeleteException();
+        }
+
         gradeRepository.delete(toDelete);
     }
 }

@@ -25,7 +25,7 @@ public class School {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "headmaster_id", referencedColumnName = "id")
     private Headmaster headmaster;
 

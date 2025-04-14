@@ -1,8 +1,15 @@
 package com.school.system.users.teacher;
 
 import com.school.system.exception.NotFoundException;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +32,7 @@ public class TeacherService {
         this.schoolRepository = schoolRepository;
     }
 
-    public TeacherResponseDTO createTeacher(TeacherRequestDTO teacherDTO) {
+    public Teacher createTeacher(TeacherRequestDTO teacherDTO) {
         Teacher toCreate = new Teacher();
 
         List<School> schools = teacherDTO.getSchools() != null
@@ -41,7 +48,7 @@ public class TeacherService {
         toCreate.setEmail(teacherDTO.getEmail());
         toCreate.setSchools(schools);
 
-        return TeacherMapper.teacherToTeacherResponseDTO(teacherRepository.save(toCreate));
+        return teacherRepository.save(toCreate);
     }
 
     public Page<TeacherResponseDTO> getTeachers(int pageNo, int pageSize) {
@@ -50,9 +57,24 @@ public class TeacherService {
         return teachers.map(teacher -> TeacherMapper.teacherToTeacherResponseDTO(teacher));
     }
 
-    public TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO teacherDTO) {
+    public TeacherResponseDTO getTeacher(UUID id, User user) {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Teacher not found"));
+
+        if(!ReadPolicy.canReadTeacher(user, teacher)) {
+            throw new CannotReadException();
+        }
+
+        return TeacherMapper.teacherToTeacherResponseDTO(teacher);
+    }
+
+    public TeacherResponseDTO updateTeacher(UUID id, TeacherRequestDTO teacherDTO, User user) {
         Teacher toUpdate = teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher not found"));
+
+        if(!UpdatePolicy.canUpdateTeacher(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         List<School> schools = teacherDTO.getSchools() != null
                 ? schoolRepository.findAllById(teacherDTO.getSchools())
@@ -68,9 +90,14 @@ public class TeacherService {
         return TeacherMapper.teacherToTeacherResponseDTO(teacherRepository.save(toUpdate));
     }
 
-    public void deleteTeacher(UUID id) {
+    public void deleteTeacher(UUID id, User user) {
         Teacher toDelete = teacherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Teacher not found"));
+
+        if(!DeletePolicy.canDeleteTeacher(user)) {
+            throw new CannotDeleteException();
+        }
+
         teacherRepository.delete(toDelete);
     }
 }

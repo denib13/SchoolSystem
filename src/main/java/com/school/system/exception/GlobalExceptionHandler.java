@@ -41,6 +41,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> handleForbiddenException(ForbiddenException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", 403);
+        errorResponse.put("code", ex.getCode());
+        errorResponse.put("message", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralError(Exception ex) {
         Map<String, Object> errorResponse = new HashMap<>();

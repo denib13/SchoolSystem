@@ -3,10 +3,17 @@ package com.school.system.users.student;
 import com.school.system.exception.NotFoundException;
 import com.school.system.grade.Grade;
 import com.school.system.grade.GradeRepository;
+import com.school.system.policy.DeletePolicy;
+import com.school.system.policy.ReadPolicy;
+import com.school.system.policy.UpdatePolicy;
+import com.school.system.policy.exception.CannotDeleteException;
+import com.school.system.policy.exception.CannotReadException;
+import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
 import com.school.system.users.parents.Parent;
 import com.school.system.users.parents.ParentRepository;
+import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +42,7 @@ public class StudentService {
         this.gradeRepository = gradeRepository;
     }
 
-    public StudentResponseDTO createStudent(StudentRequestDTO studentDTO) {
+    public Student createStudent(StudentRequestDTO studentDTO) {
         List<Parent> parents = studentDTO.getParents() != null
                 ? parentRepository.findAllById(studentDTO.getParents())
                 : new ArrayList<>();
@@ -56,7 +63,7 @@ public class StudentService {
         toCreate.setSchool(school);
         toCreate.setSchoolClass(schoolClass);
 
-        return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toCreate));
+        return studentRepository.save(toCreate);
     }
 
     public Page<StudentResponseDTO> getStudents(int pageNo, int pageSize) {
@@ -65,9 +72,24 @@ public class StudentService {
         return students.map(student -> StudentMapper.studentToStudentResponseDTO(student));
     }
 
-    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO) {
+    public StudentResponseDTO getStudent(UUID id, User user) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        if(!ReadPolicy.canReadStudent(user, student)) {
+            throw new CannotReadException();
+        }
+
+        return StudentMapper.studentToStudentResponseDTO(student);
+    }
+
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO studentDTO, User user) {
         Student toUpdate = studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        if(!UpdatePolicy.canUpdateStudent(user, toUpdate)) {
+            throw new CannotUpdateException();
+        }
 
         List<Parent> parents = studentDTO.getParents() != null
                 ? parentRepository.findAllById(studentDTO.getParents())
@@ -95,9 +117,14 @@ public class StudentService {
         return StudentMapper.studentToStudentResponseDTO(studentRepository.save(toUpdate));
     }
 
-    public void deleteStudent(UUID id) {
+    public void deleteStudent(UUID id, User user) {
         Student toDelete = studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        if(!DeletePolicy.canDeleteStudent(user, toDelete)) {
+            throw new CannotDeleteException();
+        }
+
         studentRepository.delete(toDelete);
     }
 }

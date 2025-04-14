@@ -1,10 +1,12 @@
 package com.school.system.absence;
 
+import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,9 @@ public class AbsenceController {
     }
 
     @PostMapping
-    public ResponseEntity<AbsenceResponseDTO> createAbsence(@RequestBody @Valid AbsenceRequestDTO absenceDTO) {
-        return new ResponseEntity<>(absenceService.createAbsence(absenceDTO), HttpStatus.CREATED);
+    public ResponseEntity<AbsenceResponseDTO> createAbsence(@RequestBody @Valid AbsenceRequestDTO absenceDTO,
+                                                            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(absenceService.createAbsence(absenceDTO, user), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -33,15 +36,23 @@ public class AbsenceController {
         return new ResponseEntity<>(absenceService.getAbsences(pageNo, pageSize), HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<AbsenceResponseDTO> getAbsence(@PathVariable("id") UUID id,
+                                                         @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(absenceService.getAbsence(id, user), HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<AbsenceResponseDTO> updateAbsence(@PathVariable("id") UUID id,
-                                                            @RequestBody @Valid AbsenceRequestDTO absenceDTO) {
-        return new ResponseEntity<>(absenceService.updateAbsence(id, absenceDTO), HttpStatus.OK);
+                                                            @RequestBody @Valid AbsenceRequestDTO absenceDTO,
+                                                            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(absenceService.updateAbsence(id, absenceDTO, user), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteAbsence(@PathVariable("id") UUID id) {
-        absenceService.deleteAbsence(id);
+    public ResponseEntity<Void> deleteAbsence(@PathVariable("id") UUID id,
+                                              @AuthenticationPrincipal User user) {
+        absenceService.deleteAbsence(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
