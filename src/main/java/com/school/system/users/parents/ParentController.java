@@ -1,5 +1,6 @@
 package com.school.system.users.parents;
 
+import com.school.system.users.student.StudentResponseDTO;
 import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,15 @@ public class ParentController {
                                              @AuthenticationPrincipal User user) {
         parentService.deleteParent(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}/children")
+    public ResponseEntity<Page<StudentResponseDTO>> getChildren(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(parentService.getChildren(id, pageNo, pageSize, user), HttpStatus.OK);
     }
 }

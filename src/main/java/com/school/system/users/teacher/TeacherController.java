@@ -1,5 +1,10 @@
 package com.school.system.users.teacher;
 
+import com.school.system.absence.AbsenceResponseDTO;
+import com.school.system.mark.MarkResponseDTO;
+import com.school.system.remark.RemarkResponseDTO;
+import com.school.system.school.SchoolResponseDTO;
+import com.school.system.subject.SubjectResponseDTO;
 import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +59,55 @@ public class TeacherController {
                                               @AuthenticationPrincipal User user) {
         teacherService.deleteTeacher(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}/schools")
+    public ResponseEntity<Page<SchoolResponseDTO>> getTeacherSchools(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(teacherService.getTeacherSchools(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/subjects")
+    public ResponseEntity<Page<SubjectResponseDTO>> getTeacherSubjects(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(teacherService.getTeacherSubjects(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/marks")
+    public ResponseEntity<Page<MarkResponseDTO>> getTeacherMarks(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(teacherService.getTeacherMarks(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/remarks")
+    public ResponseEntity<Page<RemarkResponseDTO>> getTeacherRemarks(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(teacherService.getTeacherRemarks(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/absences")
+    public ResponseEntity<Page<AbsenceResponseDTO>> getTeacherAbsences(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(teacherService.getTeacherAbsences(id, pageNo, pageSize, user), HttpStatus.OK);
     }
 }

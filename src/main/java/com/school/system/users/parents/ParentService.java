@@ -8,10 +8,13 @@ import com.school.system.policy.exception.CannotDeleteException;
 import com.school.system.policy.exception.CannotReadException;
 import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.users.student.Student;
+import com.school.system.users.student.StudentMapper;
 import com.school.system.users.student.StudentRepository;
+import com.school.system.users.student.StudentResponseDTO;
 import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -98,5 +101,16 @@ public class ParentService {
         }
 
         parentRepository.delete(toDelete);
+    }
+
+    public Page<StudentResponseDTO> getChildren(UUID id, int pageNo, int pageSize, User user) {
+        Parent parent = parentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Parent not found"));
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<StudentResponseDTO> children = StudentMapper.studentListToStudentResponseDTOList(parent.getChildren());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), children.size());
+        List<StudentResponseDTO> pageContent = children.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, children.size());
     }
 }

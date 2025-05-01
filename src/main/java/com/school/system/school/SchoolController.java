@@ -1,5 +1,8 @@
 package com.school.system.school;
 
+import com.school.system.grade.GradeResponseDTO;
+import com.school.system.users.student.StudentResponseDTO;
+import com.school.system.users.teacher.TeacherResponseDTO;
 import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +57,40 @@ public class SchoolController {
                                              @AuthenticationPrincipal User user) {
         schoolService.deleteSchool(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}/grades")
+    public ResponseEntity<Page<GradeResponseDTO>> getGrades(
+            @PathVariable("id") UUID id,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(schoolService.findGradesBySchool(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/students")
+    public ResponseEntity<Page<StudentResponseDTO>> getStudents(
+            @PathVariable("id") UUID id,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(schoolService.findStudentsBySchool(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/teachersPage")
+    public ResponseEntity<Page<TeacherResponseDTO>> getTeachersPage(
+            @PathVariable("id") UUID id,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user
+    ) {
+        return new ResponseEntity<>(schoolService.findTeachersPageBySchool(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/teachers")
+    public ResponseEntity<List<TeacherResponseDTO>> getTeachers(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(schoolService.findTeachersBySchool(id), HttpStatus.OK);
     }
 }

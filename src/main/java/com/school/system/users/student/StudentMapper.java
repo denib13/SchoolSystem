@@ -18,11 +18,14 @@ public class StudentMapper {
 
         return StudentResponseDTO
                 .builder()
+                .id(student.getId())
                 .name(student.getName())
                 .middleName(student.getMiddleName())
                 .surname(student.getSurname())
+                .nationalIdNumber(student.getNationalIdNumber())
                 .username(student.getUsername())
                 .email(student.getEmail())
+                .role(student.getRole() != null ? student.getRole().getRoleAsString() : "undefined")
                 .school(school)
                 .schoolClass(grade)
                 .build();

@@ -92,19 +92,19 @@ public class AbsenceService {
             throw new CannotUpdateException();
         }
 
-        if(toUpdate.getTeacher().getId() != absenceDTO.teacher()) {
+        if(!toUpdate.getTeacher().getId().equals(absenceDTO.teacher())) {
             Teacher teacher = teacherRepository.findById(absenceDTO.teacher())
                     .orElseThrow(() -> new NotFoundException("Teacher not found"));
             toUpdate.setTeacher(teacher);
         }
 
-        if(toUpdate.getStudent().getId() != absenceDTO.student()) {
+        if(!toUpdate.getStudent().getId().equals(absenceDTO.student())) {
             Student student = studentRepository.findById(absenceDTO.student())
                     .orElseThrow(() -> new NotFoundException("Student not found"));
             toUpdate.setStudent(student);
         }
 
-        if(toUpdate.getSubject().getId() != absenceDTO.subject()) {
+        if(!toUpdate.getSubject().getId().equals(absenceDTO.subject())) {
             Subject subject = subjectRepository.findById(absenceDTO.subject())
                     .orElseThrow(() -> new NotFoundException("Subject not found"));
             toUpdate.setSubject(subject);

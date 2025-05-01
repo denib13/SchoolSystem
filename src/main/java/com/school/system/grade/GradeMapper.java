@@ -14,6 +14,7 @@ public class GradeMapper {
         SchoolResponseDTO school = SchoolMapper.schoolToSchoolResponseDTO(grade.getSchool());
         return GradeResponseDTO
                 .builder()
+                .id(grade.getId())
                 .year(grade.getYear())
                 .group(grade.getGroup())
                 .school(school)

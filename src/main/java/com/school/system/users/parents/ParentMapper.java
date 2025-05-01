@@ -18,11 +18,14 @@ public class ParentMapper {
                 : new ArrayList<>();
         return ParentResponseDTO
                 .builder()
+                .id(parent.getId())
                 .name(parent.getName())
                 .middleName(parent.getMiddleName())
                 .surname(parent.getSurname())
+                .nationalIdNumber(parent.getNationalIdNumber())
                 .username(parent.getUsername())
                 .email(parent.getEmail())
+                .role(parent.getRole() != null ? parent.getRole().getRoleAsString() : "undefined")
                 .children(students)
                 .build();
     }

@@ -18,11 +18,14 @@ public class TeacherMapper {
 
         return TeacherResponseDTO
                  .builder()
+                 .id(teacher.getId())
                  .name(teacher.getName())
                  .middleName(teacher.getMiddleName())
                  .surname(teacher.getSurname())
+                 .nationalIdNumber(teacher.getNationalIdNumber())
                  .username(teacher.getUsername())
                  .email(teacher.getEmail())
+                 .role(teacher.getRole() != null ? teacher.getRole().getRoleAsString() : "undefined")
                  .schools(schools)
                  .build();
     }

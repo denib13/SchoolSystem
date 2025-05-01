@@ -22,6 +22,7 @@ public class MarkMapper {
 
         return MarkResponseDTO
                 .builder()
+                .id(mark.getId())
                 .subject(subject)
                 .student(student)
                 .teacher(teacher)

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Builder
 public record SubjectResponseDTO(
+        UUID id,
         String name,
         Integer semester,
         TeacherResponseDTO teacher,

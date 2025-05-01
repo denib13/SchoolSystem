@@ -58,4 +58,12 @@ public class HeadmasterController {
         headmasterService.deleteHeadmaster(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("unassigned")
+    public ResponseEntity<Page<HeadmasterResponseDTO>> getHeadmastersWithNoSchoolAssigned(
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return new ResponseEntity<>(headmasterService.getHeadmastersWithNoSchoolAssigned(pageNo, pageSize), HttpStatus.OK);
+    }
 }

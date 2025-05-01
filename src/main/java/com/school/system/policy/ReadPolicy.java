@@ -135,8 +135,8 @@ public class ReadPolicy {
             return true;
         }
 
-        return (hasStudentReadRights(user) && student.getSchoolClass().getStudents().stream().anyMatch(student1
-                -> student1.getId().equals(user.getId())))
+        return (hasStudentReadRights(user) && (student.getId().equals(user.getId()) || student.getSchoolClass().getStudents().stream().anyMatch(student1
+                -> student1.getId().equals(user.getId()))))
                 ||
                 (hasTeacherReadRights(user) && student.getSchoolClass().getSubjects().stream().anyMatch(subject
                         -> subject.getTeacher().getId().equals(user.getId())))
@@ -172,9 +172,9 @@ public class ReadPolicy {
         return (hasStudentReadRights(user) && teacher.getSubjects().stream().anyMatch(subject
                 -> subject.getSchoolClass().getStudents().stream().anyMatch(student -> student.getId().equals(user.getId()))))
                 ||
-                (hasTeacherReadRights(user) && teacher.getSubjects().stream().anyMatch(subject
+                (hasTeacherReadRights(user) && (teacher.getId().equals(user.getId()) || teacher.getSubjects().stream().anyMatch(subject
                         -> subject.getSchoolClass().getSubjects().stream().anyMatch(subject1
-                        -> subject1.getTeacher().getId().equals(user.getId()))))
+                        -> subject1.getTeacher().getId().equals(user.getId())))))
                 ||
                 (hasParentReadRights(user) && teacher.getSubjects().stream().anyMatch(subject ->
                         subject.getSchoolClass().getStudents().stream().anyMatch(student

@@ -1,5 +1,8 @@
 package com.school.system.grade;
 
+import com.school.system.subject.Subject;
+import com.school.system.subject.SubjectResponseDTO;
+import com.school.system.users.student.StudentResponseDTO;
 import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +58,27 @@ public class GradeController {
                                             @AuthenticationPrincipal User user) {
         gradeService.deleteGrade(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}/subjects")
+    public ResponseEntity<Page<SubjectResponseDTO>> findSubjectsByGrade(@PathVariable("id") UUID id,
+                                                                        @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                                        @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                        @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(gradeService.findSubjectsByGrade(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/studentsPage")
+    public ResponseEntity<Page<StudentResponseDTO>> findStudentsPageByGrade(@PathVariable("id") UUID id,
+                                                                        @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                                        @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                        @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(gradeService.findStudentsPageByGrade(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/students")
+    public ResponseEntity<List<StudentResponseDTO>> findStudentsByGrade(@PathVariable("id") UUID id,
+                                                                        @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(gradeService.findStudentsByGrade(id, user), HttpStatus.OK);
     }
 }

@@ -12,17 +12,17 @@ import lombok.*;
 public class UserRequestDTO {
     @NotBlank(message = "First name cannot be blank")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-Za-zÀ-ÿ '-]+$", message = "Name must contain only letters, spaces, hyphens, or apostrophes")
+    @Pattern(regexp = "^[\\p{L} '-]+$", message = "Name must contain only letters, spaces, hyphens, or apostrophes")
     private String name;
 
     @NotBlank(message = "Middle name cannot be blank")
     @Size(min = 2, max = 50, message = "Middle Name must be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-Za-zÀ-ÿ '-]+$", message = "Middle Name must contain only letters, spaces, hyphens, or apostrophes")
+    @Pattern(regexp = "^[\\p{L} '-]+$", message = "Name must contain only letters, spaces, hyphens, or apostrophes")
     private String middleName;
 
     @NotBlank(message = "Surname cannot be blank")
     @Size(min = 2, max = 50, message = "Surname must be between 2 and 50 characters")
-    @Pattern(regexp = "^[A-Za-zÀ-ÿ '-]+$", message = "Surname must contain only letters, spaces, hyphens, or apostrophes")
+    @Pattern(regexp = "^[\\p{L} '-]+$", message = "Name must contain only letters, spaces, hyphens, or apostrophes")
     private String surname;
 
     @NotBlank(message = "National ID number (EGN) cannot be blank")

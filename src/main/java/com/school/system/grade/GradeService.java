@@ -11,11 +11,16 @@ import com.school.system.policy.exception.CannotReadException;
 import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
+import com.school.system.subject.SubjectMapper;
+import com.school.system.subject.SubjectResponseDTO;
 import com.school.system.users.student.Student;
+import com.school.system.users.student.StudentMapper;
 import com.school.system.users.student.StudentRepository;
+import com.school.system.users.student.StudentResponseDTO;
 import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -90,7 +95,7 @@ public class GradeService {
                 ? studentRepository.findAllById(gradeDTO.students())
                 : new LinkedList<>();
 
-        if(toUpdate.getSchool().getId() != gradeDTO.school()) {
+        if(!toUpdate.getSchool().getId().equals(gradeDTO.school())) {
             School school = schoolRepository.findById(gradeDTO.school())
                     .orElseThrow(() -> new NotFoundException("School not found"));
             toUpdate.setSchool(school);
@@ -111,5 +116,33 @@ public class GradeService {
         }
 
         gradeRepository.delete(toDelete);
+    }
+
+    public Page<SubjectResponseDTO> findSubjectsByGrade(UUID id, int pageNo, int pageSize, User user) {
+        Grade grade = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grade not found"));
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<SubjectResponseDTO> subjects = SubjectMapper.subjectListToSubjectResponseDTOList(grade.getSubjects());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), subjects.size());
+        List<SubjectResponseDTO> pageContent = subjects.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, subjects.size());
+    }
+
+    public Page<StudentResponseDTO> findStudentsPageByGrade(UUID id, int pageNo, int pageSize, User user) {
+        Grade grade = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grade not found"));
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<StudentResponseDTO> students = StudentMapper.studentListToStudentResponseDTOList(grade.getStudents());
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), students.size());
+        List<StudentResponseDTO> pageContent = students.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, students.size());
+    }
+
+    public List<StudentResponseDTO> findStudentsByGrade(UUID id, User user) {
+        Grade grade = gradeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grade not found"));
+        return StudentMapper.studentListToStudentResponseDTOList(grade.getStudents());
     }
 }

@@ -1,5 +1,9 @@
 package com.school.system.subject;
 
+import com.school.system.absence.Absence;
+import com.school.system.absence.AbsenceResponseDTO;
+import com.school.system.mark.MarkResponseDTO;
+import com.school.system.remark.RemarkResponseDTO;
 import com.school.system.users.user.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +58,32 @@ public class SubjectController {
                                               @AuthenticationPrincipal User user) {
         subjectService.deleteSubject(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("{id}/marks")
+    public ResponseEntity<Page<MarkResponseDTO>> findMarksBySubject(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.getMarksBySubject(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/remarks")
+    public ResponseEntity<Page<RemarkResponseDTO>> findRemarksBySubject(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.getRemarksBySubject(id, pageNo, pageSize, user), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/absences")
+    public ResponseEntity<Page<AbsenceResponseDTO>> findAbsencesBySubject(
+            @PathVariable("id") UUID id,
+            @RequestParam(name = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(subjectService.getAbsencesBySubject(id, pageNo, pageSize, user), HttpStatus.OK);
     }
 }

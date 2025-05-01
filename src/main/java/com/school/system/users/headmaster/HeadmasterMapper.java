@@ -21,11 +21,14 @@ public class HeadmasterMapper {
 
         return HeadmasterResponseDTO
                 .builder()
+                .id(headmaster.getId())
                 .name(headmaster.getName())
                 .middleName(headmaster.getMiddleName())
                 .surname(headmaster.getSurname())
+                .nationalIdNumber(headmaster.getNationalIdNumber())
                 .username(headmaster.getUsername())
                 .email(headmaster.getEmail())
+                .role(headmaster.getRole() != null ? headmaster.getRole().getRoleAsString() : "undefined")
                 .school(schoolDTO)
                 .build();
     }

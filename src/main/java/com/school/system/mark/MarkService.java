@@ -92,19 +92,19 @@ public class MarkService {
             throw new CannotUpdateException();
         }
 
-        if(markDTO.subject() != toUpdate.getSubject().getId()) {
+        if(!markDTO.subject().equals(toUpdate.getSubject().getId())) {
             Subject subject = subjectRepository.findById(markDTO.subject())
                     .orElseThrow(() -> new NotFoundException("Subject not found"));
             toUpdate.setSubject(subject);
         }
 
-        if(markDTO.student() != toUpdate.getStudent().getId()) {
+        if(!markDTO.student().equals(toUpdate.getStudent().getId())) {
             Student student = studentRepository.findById(markDTO.student())
                     .orElseThrow(() -> new NotFoundException("Student not found"));
             toUpdate.setStudent(student);
         }
 
-        if(markDTO.teacher() != toUpdate.getTeacher().getId()) {
+        if(!markDTO.teacher().equals(toUpdate.getTeacher().getId())) {
             Teacher teacher = teacherRepository.findById(markDTO.teacher())
                     .orElseThrow(() -> new NotFoundException("Teacher not found"));
             toUpdate.setTeacher(teacher);

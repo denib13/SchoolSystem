@@ -19,6 +19,7 @@ public class SubjectMapper {
 
         return SubjectResponseDTO
                 .builder()
+                .id(subject.getId())
                 .name(subject.getName())
                 .semester(subject.getSemester())
                 .teacher(teacher)

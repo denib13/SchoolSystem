@@ -21,6 +21,7 @@ public class AbsenceMapper {
 
         return AbsenceResponseDTO
                 .builder()
+                .id(absence.getId())
                 .teacher(teacher)
                 .student(student)
                 .subject(subject)

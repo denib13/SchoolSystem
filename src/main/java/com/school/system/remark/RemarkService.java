@@ -93,19 +93,19 @@ public class RemarkService {
             throw new CannotUpdateException();
         }
 
-        if(toUpdate.getTeacher().getId() != remarkDTO.teacher()) {
+        if(!toUpdate.getTeacher().getId().equals(remarkDTO.teacher())) {
             Teacher teacher = teacherRepository.findById(remarkDTO.teacher())
                     .orElseThrow(() -> new NotFoundException("Teacher not found"));
             toUpdate.setTeacher(teacher);
         }
 
-        if(toUpdate.getStudent().getId() != remarkDTO.student()) {
+        if(!toUpdate.getStudent().getId().equals(remarkDTO.student())) {
             Student student = studentRepository.findById(remarkDTO.student())
                     .orElseThrow(() -> new NotFoundException("Student not found"));
             toUpdate.setStudent(student);
         }
 
-        if(toUpdate.getSubject().getId() != remarkDTO.subject()) {
+        if(!toUpdate.getSubject().getId().equals(remarkDTO.subject())) {
             Subject subject = subjectRepository.findById(remarkDTO.subject())
                     .orElseThrow(() -> new NotFoundException("Subject not found"));
             toUpdate.setSubject(subject);

@@ -8,12 +8,17 @@ public class UserMapper {
         if(user == null) {
             return null;
         }
-        return UserResponseDTO.builder()
+
+        return UserResponseDTO
+                .builder()
+                .id(user.getId())
                 .name(user.getName())
                 .middleName(user.getMiddleName())
                 .surname(user.getSurname())
+                .nationalIdNumber(user.getNationalIdNumber())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .role(user.getRole() != null ? user.getRole().getRoleAsString() : "undefined")
                 .build();
     }
 

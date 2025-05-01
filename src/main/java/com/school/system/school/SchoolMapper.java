@@ -21,6 +21,7 @@ public class SchoolMapper {
 
         return SchoolResponseDTO
                 .builder()
+                .id(school.getId())
                 .name(school.getName())
                 .city(school.getCity())
                 .headmaster(headmasterDTO)

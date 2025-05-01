@@ -9,15 +9,18 @@ import com.school.system.policy.exception.CannotReadException;
 import com.school.system.policy.exception.CannotUpdateException;
 import com.school.system.school.School;
 import com.school.system.school.SchoolRepository;
+import com.school.system.users.teacher.TeacherResponseDTO;
 import com.school.system.users.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class HeadmasterService {
@@ -85,20 +88,28 @@ public class HeadmasterService {
             throw new CannotUpdateException();
         }
 
-        School school = schoolRepository.findById(headmasterDTO.getSchool())
-                .orElseThrow(() -> new NotFoundException("School not found"));
+        School school = headmasterDTO.getSchool() != null
+                ? schoolRepository.findById(headmasterDTO.getSchool())
+                .orElseThrow(() -> new NotFoundException("School not found"))
+                : null;
 
-        if(toUpdate.getSchool() != null) {
+        if(school != null) {
+            if(toUpdate.getSchool() != null) {
+                School oldSchool = toUpdate.getSchool();
+                oldSchool.setHeadmaster(null);
+            }
+            toUpdate.setSchool(school);
+            school.setHeadmaster(toUpdate);
+        }
+        else if(headmasterDTO.getSchool() == null) {
             School oldSchool = toUpdate.getSchool();
             oldSchool.setHeadmaster(null);
+            toUpdate.setSchool(null);
         }
-        toUpdate.setSchool(school);
-        school.setHeadmaster(toUpdate);
 
         toUpdate.setName(headmasterDTO.getName());
         toUpdate.setMiddleName(headmasterDTO.getMiddleName());
         toUpdate.setSurname(headmasterDTO.getSurname());
-        toUpdate.setNationalIdNumber(headmasterDTO.getNationalIdNumber());
         toUpdate.setUsername(headmasterDTO.getUsername());
 
         Headmaster updatedHeadmaster = headmasterRepository.save(toUpdate);
@@ -121,5 +132,11 @@ public class HeadmasterService {
         }
 
         headmasterRepository.delete(toDelete);
+    }
+
+    public Page<HeadmasterResponseDTO> getHeadmastersWithNoSchoolAssigned(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Headmaster> headmasters = headmasterRepository.findBySchoolIsNull(pageable);
+        return headmasters.map(HeadmasterMapper::headmasterToHeadmasterResponseDTO);
     }
 }

@@ -22,6 +22,7 @@ public class RemarkMapper {
 
         return RemarkResponseDTO
                 .builder()
+                .id(remark.getId())
                 .teacher(teacher)
                 .student(student)
                 .subject(subject)

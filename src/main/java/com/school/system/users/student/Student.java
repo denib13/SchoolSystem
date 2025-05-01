@@ -33,11 +33,11 @@ public class Student extends User {
     private List<Parent> parents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_id", nullable = false)
+    @JoinColumn(name = "school_id")
     private School school;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", nullable = false)
+    @JoinColumn(name = "class_id")
     private Grade schoolClass;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
